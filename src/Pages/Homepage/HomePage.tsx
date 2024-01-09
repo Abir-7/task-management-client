@@ -1,8 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { changeStatus } from "../../Redux/feature/taskProgress/taskProgressSlice";
+
+import { useGetAllTaskQuery } from "../../Redux/feature/api/baseApi";
+
 
 function HomePage() {
+  const{data,isLoading}=useGetAllTaskQuery()
+  console.log(data,isLoading)
   return (
     <div className="homepage-container">
       <div className="homepage-box1">

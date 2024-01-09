@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import taskProgressSlice from './feature/taskProgress/taskProgressSlice'
+import { api } from './feature/api/baseApi'
 
 export const store = configureStore({
   reducer: {
-    taskProgess:taskProgressSlice
+    taskProgess:taskProgressSlice,
+    [api.reducerPath]:api.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware().concat(api.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

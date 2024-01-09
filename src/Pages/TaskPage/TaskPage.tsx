@@ -8,14 +8,18 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import AllTaskHeader from "./AllTaskHeader";
 import TaskDescription from "./TaskDescription";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import Modal from "./modal";
+import Modal from "./Modal";
+import { useGetAllTaskQuery } from "../../Redux/feature/api/baseApi";
+
 function TaskPage() {
+  const { status } = useSelector((state: RootState) => state.taskProgess);
+  console.log(status);
 
-  const dispatch=useDispatch()
-  const {status}=useSelector((state:RootState)=>state.taskProgess)
 
+  const {data}=useGetAllTaskQuery()
+console.log(data)
 
   function showSidebar() {
     document.getElementById("my-task-section")?.classList.toggle("active");
@@ -108,93 +112,98 @@ function TaskPage() {
     setCurrentPage((prevPage: number) => Math.max(prevPage - 1, 0));
   };
 
- 
-
   return (
     <div className="with-modal">
-      <div id="show-modal" className="show-modal"><Modal showModal={showModal}></Modal></div>
-      <div className="task-full-container">
-      <div className="task-container">
-        <div className="option">
-          <div className="main-title">
-            <div>
-              <p onClick={showSidebar} className="task-icon">
-                {" "}
-                <BiTask />
-              </p>
-            </div>
-            <div>
-              <p>Task</p>
-            </div>
-          </div>
-          <div className="task-action">
-            <span>
-              <IoMdSearch />
-            </span>
-            <span>
-              <MdOutlineNotifications />
-            </span>
-            <button onClick={showModal} className="add-task-btn">Add Task</button>
-          </div>
-        </div>
-
-        <div className="all-task-progress">
-          <div className="pending-box">
-            <AllTaskHeader statusName={'Up Next'}></AllTaskHeader> 
-            <TaskDescription></TaskDescription>
-          </div>
-          <div className="progess-box">
-            <AllTaskHeader statusName={'In Progress'}></AllTaskHeader>
-            <TaskDescription></TaskDescription> 
-          </div>
-          <div className="completed-box">
-     <AllTaskHeader statusName={'Completed'}></AllTaskHeader> 
-       <TaskDescription></TaskDescription> 
-          </div>
-        </div>
+      <div id="show-modal" className="show-modal">
+        <Modal showModal={showModal}></Modal>
       </div>
+      <div className="task-full-container">
+        <div className="task-container">
+          <div className="option">
+            <div className="main-title">
+              <div>
+                <p onClick={showSidebar} className="task-icon">
+                  {" "}
+                  <BiTask />
+                </p>
+              </div>
+              <div>
+                <p>Task</p>
+              </div>
+            </div>
+            <div className="task-action">
+              <span>
+                <IoMdSearch />
+              </span>
+              <span>
+                <MdOutlineNotifications />
+              </span>
+              <button onClick={showModal} className="add-task-btn">
+                Add Task
+              </button>
+            </div>
+          </div>
 
-      <div id="my-task-section" className="my-task-section">
-        <div className="member-section">Members</div>
-        <div className="member-photo-container">
-          <button className="show-member-button" onClick={prevPage}>
-            <FaArrowCircleLeft></FaArrowCircleLeft>
-          </button>
-          <div id="member-photo" className="member-photo-list">
-            {currentImages?.map((img, index) => (
-              <div className="tooltip">
-                <img
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content={index + "md. tazwarul islam abir"}
-                  className="member-slide"
-                  key={index}
-                  src={img}
-                  alt=""
-                />
-                <Tooltip
-                  id="my-tooltip"
-                  style={{ backgroundColor: "#9f65fc" ,boxShadow:'0 0 5px rgba(0, 0, 0, 0.5)'}}
-                />
+          <div className="all-task-progress">
+            <div className="pending-box">
+              <AllTaskHeader statusName={"Up Next"}></AllTaskHeader>
+              <TaskDescription></TaskDescription>
+            </div>
+            <div className="progess-box">
+              <AllTaskHeader statusName={"In Progress"}></AllTaskHeader>
+              <TaskDescription></TaskDescription>
+            </div>
+            <div className="completed-box">
+              <AllTaskHeader statusName={"Completed"}></AllTaskHeader>
+              <TaskDescription></TaskDescription>
+            </div>
+          </div>
+        </div>
+
+        <div id="my-task-section" className="my-task-section">
+          <div className="member-section">Members</div>
+          <div className="member-photo-container">
+            <button className="show-member-button" onClick={prevPage}>
+              <FaArrowCircleLeft></FaArrowCircleLeft>
+            </button>
+            <div id="member-photo" className="member-photo-list">
+              {currentImages?.map((img, index) => (
+                <div className="tooltip">
+                  <img
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={index + "md. tazwarul islam abir"}
+                    className="member-slide"
+                    key={index}
+                    src={img}
+                    alt=""
+                  />
+                  <Tooltip
+                    id="my-tooltip"
+                    style={{
+                      backgroundColor: "#9f65fc",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <button className="show-member-button" onClick={nextPage}>
+              <FaArrowCircleRight></FaArrowCircleRight>
+            </button>
+          </div>
+          <div className="my-task-section-two">My Task</div>
+          <div className="my-task-list">
+            {array.map((task, index) => (
+              <div key={index} className="my-task-name">
+                <div className="my-task-taskname">{task.task}</div>
+                <div className="my-task-taskname">
+                  {task.isCompleted ? "True" : "False"}
+                </div>
               </div>
             ))}
           </div>
-          <button className="show-member-button" onClick={nextPage}>
-            <FaArrowCircleRight></FaArrowCircleRight>
-          </button>
-        </div>
-        <div className="my-task-section-two">My Task</div>
-        <div className="my-task-list">
-          {array.map((task, index) => (
-            <div key={index} className="my-task-name">
-              <div className="my-task-taskname">{task.task}</div>
-              <div className="my-task-taskname">
-                {task.isCompleted ? "True" : "False"}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
-    </div>
     </div>
   );
 }
