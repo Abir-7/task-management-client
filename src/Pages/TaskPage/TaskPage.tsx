@@ -17,9 +17,15 @@ function TaskPage() {
   const { status } = useSelector((state: RootState) => state.taskProgess);
   console.log(status);
 
+  interface getAllTask{
+    data:any,
+    isLoading:boolean,
+    isError:boolean,
+    error:string
+  }
 
-  const {data}=useGetAllTaskQuery()
-console.log(data)
+  const {data,isLoading,isError,error}=useGetAllTaskQuery<getAllTask>()
+console.log(data,error)
 
   function showSidebar() {
     document.getElementById("my-task-section")?.classList.toggle("active");
@@ -139,11 +145,11 @@ console.log(data)
                 <MdOutlineNotifications />
               </span>
               <button onClick={showModal} className="add-task-btn">
-                Add Task
+                Add Task {data?.length}
               </button>
             </div>
           </div>
-
+          
           <div className="all-task-progress">
             <div className="pending-box">
               <AllTaskHeader statusName={"Up Next"}></AllTaskHeader>

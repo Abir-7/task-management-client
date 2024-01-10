@@ -3,12 +3,17 @@ import "./navbar.css";
 import { FaComments, FaHome, FaTasks } from "react-icons/fa";
 import { BiLogOutCircle } from "react-icons/bi"
 import { FaRegUser } from "react-icons/fa"
+import { signOut } from "firebase/auth";
+import auth from "../../firebaseConfig/firebase";
 function Navbar() {
   function profileOption() {
     const profileIcon = document.getElementById(
       "profile-option"
     ) as HTMLElement;
     profileIcon.classList.toggle("actives");
+  }
+  const logOutUser=()=>{
+    signOut(auth)
   }
   return (
     <div className="navbar">
@@ -32,7 +37,7 @@ function Navbar() {
 
       <div id="profile" className="profile" onClick={profileOption} >
         <div id="profile-option" className="profile-option">
-         <button className="logout"><BiLogOutCircle></BiLogOutCircle></button>
+         <button onClick={logOutUser} className="logout"><BiLogOutCircle></BiLogOutCircle></button>
          <Link className="user" to={'#'}><FaRegUser></FaRegUser></Link>
         </div>
         <img

@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import taskProgressSlice from './feature/taskProgress/taskProgressSlice'
+import userInfoSlice from './feature/userInfo/userInfoSlice'
 import { api } from './feature/api/baseApi'
 
 export const store = configureStore({
   reducer: {
     taskProgess:taskProgressSlice,
+    userInfo:userInfoSlice,
     [api.reducerPath]:api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

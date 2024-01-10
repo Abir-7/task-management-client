@@ -1,22 +1,71 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaLocationArrow } from "react-icons/fa6";
 import { MdTaskAlt } from "react-icons/md";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "../../Redux/store";
+import { setSingupStatus, userLogin } from "../../Redux/feature/userInfo/userInfoSlice";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 function UserLogin() {
+  const navigate=useNavigate()
+  const { isSignupSuccessfull ,userInfoError} = useSelector((state: RootState) => state.userInfo);
+  const dispatch = useDispatch<typeof store.dispatch>()
+  interface Inputs {
+    email: string;
+    password: string;
+  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = (data:Inputs) => {
+    console.log(data)
+    dispatch(
+      userLogin({
+        email: data.email,
+        password: data.password,
+      })
+    );
+  };
+
+  useEffect(()=>{
+    if(isSignupSuccessfull){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(setSingupStatus(false))
+      navigate('/task')
+    }
+    },[isSignupSuccessfull])
+
   return (
     <div className="login-background">
       <div className="form">
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)} action="">
           <fieldset>
             <legend>Login:</legend>
             <div className="form-section">
               <div>
                 <label htmlFor="">Email</label> <br />
-                <input type="email" />
+                <input {...register("email", { required: true })} type="email" />
+                {errors.email && (
+                  <span className="err-msg">This field is required</span>
+                )}
               </div>
               <br />
               <div>
                 <label htmlFor="">Password</label> <br />
-                <input type="password" />
+                <input {...register("password", { required: true })} type="password" />
+                {errors.password && (
+                  <span className="err-msg">This field is required</span>
+                )}
               </div>
             </div>
             <div className="singnup-link-section">
@@ -34,6 +83,10 @@ function UserLogin() {
                 </Link>
               </div>
             </div>
+            <input type="submit" value={'Submit'} />
+            <div style={{paddingTop:'5px',color:'red',textAlign:'center'}}>
+          <p>{userInfoError}</p>
+          </div>
           </fieldset>
         </form>
       </div>
