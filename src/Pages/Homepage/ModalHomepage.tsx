@@ -1,44 +1,34 @@
-import { memo, useEffect } from "react";
-import { useAddTaskMutation } from "../../Redux/feature/api/baseApi";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { change_Modal_Task_Status } from "../../Redux/feature/modalSlice/modalSlice";
+
+import { useAddProjectMutation } from "../../Redux/feature/api/baseApi";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { change_Modal_Home_Status } from "../../Redux/feature/modalSlice/modalSlice";
+import { useEffect } from "react";
 import Swal from "sweetalert2";
 
-interface user {
-  _id: string;
-  email: string;
-  name: string;
-  mobile: string;
-  role: string;
-  __v: number;
-}
-
-interface showModal {
-  isModal_Task_true: boolean;
-  user: user[];
-  id:any
-}
-
 interface Inputs {
-  taskName: string;
+  projectName: string;
   description: string;
   date: string;
-  assign: string;
 }
-
-function Modal({ isModal_Task_true, user,id }: showModal) {
-  const dispatch = useDispatch();
-  const [addTasks, { isSuccess,isError }] = useAddTaskMutation();
+function ModalHomepage() {
+  const dispatch=useDispatch()
+  const { isModal_Home_true } = useSelector(
+    (state: RootState) => state.modalStatus
+  );
+  const [addProject,{isSuccess,isError}] = useAddProjectMutation();
+  //console.log(data, isError, isLoading);
 
   useEffect(()=>{
     if(isSuccess){
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Task successfully added",
+        title: "Add Project Successful",
         showConfirmButton: false,
         timer: 1500,
+
       })
     }
     if(isError){
@@ -48,6 +38,7 @@ function Modal({ isModal_Task_true, user,id }: showModal) {
         title: "An error occurred",
         showConfirmButton: false,
         timer: 1500,
+
       })
     }
   },[isError,isSuccess])
@@ -60,21 +51,22 @@ function Modal({ isModal_Task_true, user,id }: showModal) {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-    //console.log(data, "gg");
-    addTasks({taskData:{ ...data, status: "pending" },id:id});
-    dispatch(change_Modal_Task_Status(!isModal_Task_true));
+    addProject({ ...data, isCompleted: false,allTask:[] });
+    dispatch(change_Modal_Home_Status(!isModal_Home_true))
     reset();
   };
-
   return (
     <div className="modal">
-      <h2>Add Task</h2>
+      <h2>Add Project</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="" action="">
         <div className="form-section">
           <div>
             <label htmlFor="">Name</label> <br />
-            <input {...register("taskName", { required: true })} type="text" />
-            {errors.taskName && (
+            <input
+              {...register("projectName", { required: true })}
+              type="text"
+            />
+            {errors.projectName && (
               <span className="err-msg">This field is required</span>
             )}
           </div>
@@ -99,21 +91,6 @@ function Modal({ isModal_Task_true, user,id }: showModal) {
             )}
           </div>
           <br />
-          <div>
-            <label htmlFor="">Assign to</label> <br />
-            <select required {...register("assign", { required: true })}>
-              {" "}
-              {user?.map((user) => (
-                <option key={user._id} value={user.email}>
-                  {user.name}
-                </option>
-              ))}
-            </select>
-            {errors.assign && (
-              <span className="err-msg">This field is required</span>
-            )}
-            {/* <p style={{ color: "red", marginTop: "5px" }}>{formErr}</p> */}
-          </div>
         </div>
         <button type="submit" className="add-task-btn2">
           Add
@@ -123,4 +100,4 @@ function Modal({ isModal_Task_true, user,id }: showModal) {
   );
 }
 
-export default memo(Modal);
+export default ModalHomepage;

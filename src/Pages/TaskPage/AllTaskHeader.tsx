@@ -1,10 +1,10 @@
 
 
-function AllTaskHeader({statusName}:{statusName:string}) {
+function AllTaskHeader({statusName,length}:{statusName:string,length:number}) {
   return (
     <div className="all-task-status-box">
     <p>{statusName}</p>
-    <p className="total-task">2</p>
+    <p className="total-task">{length}</p>
   </div>
   )
 }

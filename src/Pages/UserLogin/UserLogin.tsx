@@ -7,14 +7,17 @@ import { RootState, store } from "../../Redux/store";
 import { setSingupStatus, userLogin } from "../../Redux/feature/userInfo/userInfoSlice";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+
+interface Inputs {
+  email: string;
+  password: string;
+}
+
 function UserLogin() {
   const navigate=useNavigate()
   const { isSignupSuccessfull ,userInfoError} = useSelector((state: RootState) => state.userInfo);
   const dispatch = useDispatch<typeof store.dispatch>()
-  interface Inputs {
-    email: string;
-    password: string;
-  }
+
   const {
     register,
     handleSubmit,
@@ -22,7 +25,7 @@ function UserLogin() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data:Inputs) => {
-    console.log(data)
+    //console.log(data)
     dispatch(
       userLogin({
         email: data.email,
@@ -36,12 +39,12 @@ function UserLogin() {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Your work has been saved",
+        title: "Login Successful",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       })
       dispatch(setSingupStatus(false))
-      navigate('/task')
+      navigate('/')
     }
     },[isSignupSuccessfull])
 

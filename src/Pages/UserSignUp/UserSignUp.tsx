@@ -17,9 +17,9 @@ function UserSignUp() {
   }
   const dispatch = useDispatch<typeof store.dispatch>();
 
-  const { userName, email,isSignupSuccessfull ,userInfoError} = useSelector((state: RootState) => state.userInfo);
+  const {isSignupSuccessfull,userInfoError} = useSelector((state: RootState) => state.userInfo);
 
-  console.log(userName,email)
+  //console.log(userName,email)
 
   const {
     register,
@@ -43,9 +43,9 @@ function UserSignUp() {
     Swal.fire({
       position: "center",
       icon: "success",
-      title: "Your work has been saved",
+      title: "Signup Successful",
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
     })
     dispatch(setSingupStatus(false))
     navigate('/')

@@ -8,9 +8,9 @@ import {
 import auth from "../../../firebaseConfig/firebase";
 
 interface userInfo {
-  userName: string | null;
-  email: string | null;
-  token: string;
+  userName: string;
+  email: string;
+  token: any;
   isUserLoading: boolean;
 
   isUserInfoError: boolean;
@@ -54,35 +54,38 @@ export const userReg = createAsyncThunk(
   }) => {
     try {
       const data = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(data);
+      //console.log(data);
       if (data.user && auth.currentUser) {
         await updateProfile(auth.currentUser, {
           displayName: name,
           photoURL: null,
         });
-        const res: any = await fetch("http://localhost:3000/addNewUser", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email.toLowerCase(),
-            name: name,
-            mobile: mobile,
-            role: "user",
-          }),
-        });
+        const res: any = await fetch(
+          "https://task-management-system-server-tau.vercel.app/addNewUser",
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email.toLowerCase(),
+              name: name,
+              mobile: mobile,
+              role: "user",
+            }),
+          }
+        );
         if (!res.ok) {
           // Handle the error based on the status code
-          console.log(`Error: ${res.status} - ${res.statusText}`, "userslice");
+          //console.log(`Error: ${res.status} - ${res.statusText}`, "userslice");
           await deleteUser(auth.currentUser);
           throw res.status + " " + "Server Error";
         } else {
-          console.log(res.ok, "userslice2");
+          //console.log(res.ok, "userslice2");
         }
         return {
-          name: data.user.displayName,
-          email: data.user.email,
+          name: data.user.displayName ? data.user.displayName : "",
+          email: data.user.email ? data.user.email : "",
         };
       } else {
         if (auth.currentUser) {
@@ -94,7 +97,7 @@ export const userReg = createAsyncThunk(
         };
       }
     } catch (error: any) {
-      console.log(error.message);
+      //console.log(error.message);
       throw error;
     }
   }
@@ -103,15 +106,27 @@ export const userReg = createAsyncThunk(
 //is admin
 export const checkAdmin = createAsyncThunk(
   "userInfoSlice/checkAdmin",
-  async (email:string) => {
+  async (email: string) => {
+    const token = localStorage.getItem("access-token");
     try {
-      const response = await fetch(`http://localhost:3000/checkAdmin?email=${email}`);
+      const response = await fetch(
+        `https://task-management-system-server-tau.vercel.app/checkAdmin?email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Adjust the content type if necessary
+          },
+        }
+      );
       if (!response.ok) {
-        throw new Error(`Failed to check admin status. Status: ${response.status}`);
+        throw new Error(
+          `Failed to check admin status. Status: ${response.status}`
+        );
       }
       const data = await response.json();
-      console.log(data,'checkAdmin');
-      return data.isAdmin
+      //console.log(data,'checkAdmin');
+      return data.isAdmin;
     } catch (error) {
       throw error;
     }
@@ -124,15 +139,15 @@ export const userLogin = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }) => {
     try {
       const data: any = await signInWithEmailAndPassword(auth, email, password);
-      console.log(data, "user signin", data?._tokenResponse?.displayName);
+      //console.log(data, "user signin", data?._tokenResponse?.displayName);
       return {
-        name: data?._tokenResponse?.displayName
-          ? data?._tokenResponse?.displayName
+        name: data._tokenResponse.displayName
+          ? data._tokenResponse.displayName
           : "",
-        email: data?._tokenResponse?.email,
+        email: data._tokenResponse.email ? data._tokenResponse.email : "",
       };
     } catch (error: any) {
-      console.log(error.message);
+      //console.log(error.message);
       throw error;
     }
   }
@@ -142,6 +157,9 @@ export const userInfoSlice = createSlice({
   name: "userInfo",
   initialState,
   reducers: {
+    setToken: (state, { payload }: PayloadAction<any>) => {
+      state.token = payload;
+    },
     setUserInfo: (
       state,
       { payload }: PayloadAction<{ email: string; name: string }>
@@ -167,10 +185,7 @@ export const userInfoSlice = createSlice({
       })
       .addCase(
         userReg.fulfilled,
-        (
-          state,
-          action: PayloadAction<{ name: string | null; email: string | null }>
-        ) => {
+        (state, action: PayloadAction<{ name: string; email: string }>) => {
           state.userName = action.payload.name;
           state.email = action.payload.email;
           state.isUserLoading = false;
@@ -216,30 +231,28 @@ export const userInfoSlice = createSlice({
       })
 
       .addCase(checkAdmin.pending, (state) => {
-        state.isAdmin= false,
-        state.isAdminError= false,
-        state.adminError= ""
+        (state.isAdmin = false),
+          (state.isAdminError = false),
+          (state.adminError = "");
       })
-      
+
       .addCase(
         checkAdmin.fulfilled,
-        (
-          state,
-          action: PayloadAction<boolean>
-        ) => {
-          state.isAdmin= action.payload,
-          state.isAdminError= false,
-          state.adminError= ""
-        })
-        
+        (state, action: PayloadAction<boolean>) => {
+          (state.isAdmin = action.payload),
+            (state.isAdminError = false),
+            (state.adminError = "");
+        }
+      )
+
       .addCase(checkAdmin.rejected, (state, action) => {
-        state.isAdmin= false,
-        state.isAdminError= true,
-        state.adminError=action.error.message
-      })
+        (state.isAdmin = false),
+          (state.isAdminError = true),
+          (state.adminError = action.error.message);
+      });
   },
 });
 
-export const { setSingupStatus, setUserInfo, setUserLoading } =
+export const { setSingupStatus, setUserInfo, setUserLoading,setToken } =
   userInfoSlice.actions;
 export default userInfoSlice.reducer;
