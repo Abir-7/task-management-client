@@ -12,13 +12,12 @@ import {
   setUserInfo,
   setUserLoading,
 } from "../Redux/feature/userInfo/userInfoSlice";
-
-
 interface PrivateRoutesProps {
   children: ReactNode;
 }
 
 const PrivetRouts = ({ children }: PrivateRoutesProps) => {
+
   const location = useLocation();
   const dispatch = useDispatch<typeof store.dispatch>();
   const { email, isUserLoading } = useSelector(
@@ -29,7 +28,8 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     const unsubscribe = onAuthStateChanged(auth, (user: any | null) => {
       if (user) {
         //console.log('useeefact')
-
+        const email = user.email;
+        console.log(email);
         fetch("https://task-management-system-server-tau.vercel.app/jwt", {
           method: "POST",
           headers: {
@@ -48,6 +48,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
             dispatch(setUserLoading(false));
             dispatch(checkAdmin(user.email));
           });
+
       } else {
         signOut(auth);
         dispatch(setUserLoading(false));

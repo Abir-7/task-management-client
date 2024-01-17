@@ -29,28 +29,28 @@ interface Inputs {
 
 function Modal({ isModal_Task_true, user,id }: showModal) {
   const dispatch = useDispatch();
-  const [addTasks, { isSuccess,isError }] = useAddTaskMutation();
+  const [addTasks, { isSuccess:isAddSuccess,isError:isAddError }] = useAddTaskMutation();
 
   useEffect(()=>{
-    if(isSuccess){
+    if(isAddSuccess){
       Swal.fire({
         position: "center",
-        icon: "error",
+        icon: "success",
         title: "Task successfully added",
         showConfirmButton: false,
         timer: 1500,
       })
     }
-    if(isError){
+    if(isAddError){
       Swal.fire({
         position: "center",
-        icon: "success",
+        icon: "error",
         title: "An error occurred",
         showConfirmButton: false,
         timer: 1500,
       })
     }
-  },[isError,isSuccess])
+  },[isAddSuccess,isAddError])
 
   const {
     reset,

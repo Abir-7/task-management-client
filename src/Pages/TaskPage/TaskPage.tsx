@@ -30,7 +30,7 @@ interface Task {
 }
 
 interface TaskLists {
-  pendingTask?: Task[]; 
+  pendingTask?: Task[];
   onGoingTask?: Task[];
   completedTask?: Task[];
 }
@@ -41,7 +41,6 @@ interface getAllTask {
   isError: boolean;
   error: string;
 }
-
 function TaskPage() {
   const {
     userName,
@@ -52,7 +51,14 @@ function TaskPage() {
     userInfoError,
   } = useSelector((state: RootState) => state.userInfo);
   const { id } = useParams<{ id: string }>();
-  console.log(id, "id",userName,isSignupSuccessfull,adminError,userInfoError);
+  console.log(
+    id,
+    "id",
+    userName,
+    isSignupSuccessfull,
+    adminError,
+    userInfoError
+  );
   const dispatch = useDispatch();
 
   const { isModal_Task_true } = useSelector(
@@ -61,28 +67,35 @@ function TaskPage() {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const {
-    data: allTask,
-    isLoading,
-  } = useGetAllTaskQuery<getAllTask>({ id});
-  console.log(allTask,'all task');
+  const { data: allTask, isLoading } = useGetAllTaskQuery<getAllTask>({ id },{pollingInterval:30000});
+  console.log(allTask, "all task");
 
-  const filteredTask=searchValue=='' ?allTask?.getAllTask:filterTask()
-  console.log(filteredTask,'all task 2')
+  const filteredTask = searchValue == "" ? allTask?.getAllTask : filterTask();
+  console.log(filteredTask, "all task 2");
 
-  function filterTask():TaskLists{
-    const pendingTask=allTask?.pendingTask.filter((task:any)=> task.taskName.toLowerCase().includes(searchValue.toLowerCase()))
-    const onGoingTask=allTask?.onGoingTask.filter((task:any)=> task.taskName.toLowerCase().includes(searchValue.toLowerCase()))
-    const completedTask=allTask?.completedTask.filter((task:any)=> task.taskName.toLowerCase().includes(searchValue.toLowerCase()))
-  
-    console.log(pendingTask,'1')
-    console.log(onGoingTask,'2')
-    console.log(completedTask,'3')
-    return {pendingTask:pendingTask,onGoingTask:onGoingTask,completedTask:completedTask}
+  function filterTask(): TaskLists {
+    const pendingTask = allTask?.pendingTask.filter((task: any) =>
+      task.taskName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    const onGoingTask = allTask?.onGoingTask.filter((task: any) =>
+      task.taskName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    const completedTask = allTask?.completedTask.filter((task: any) =>
+      task.taskName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    console.log(pendingTask, "1");
+    console.log(onGoingTask, "2");
+    console.log(completedTask, "3");
+    return {
+      pendingTask: pendingTask,
+      onGoingTask: onGoingTask,
+      completedTask: completedTask,
+    };
   }
-  useEffect(()=>{
-    filterTask()
-  },[searchValue])
+  useEffect(() => {
+    filterTask();
+  }, [searchValue]);
   function showSidebar() {
     document.getElementById("my-task-section")?.classList.toggle("active");
   }
@@ -168,7 +181,11 @@ function TaskPage() {
                     <MdOutlineNotifications />
                   </span> */}
                   <button
-                    style={(isAdmin && allTask?.isCompleted==false) ? {} : { display: "none" }}
+                    style={
+                      isAdmin && allTask?.isCompleted == false
+                        ? {}
+                        : { display: "none" }
+                    }
                     onClick={() =>
                       dispatch(change_Modal_Task_Status(!isModal_Task_true))
                     }
@@ -189,7 +206,11 @@ function TaskPage() {
                     isAdmin={isAdmin}
                     email={email}
                     id={id}
-                    tasks={searchValue==''?allTask?.pendingTask:filteredTask?.pendingTask}
+                    tasks={
+                      searchValue == ""
+                        ? allTask?.pendingTask
+                        : filteredTask?.pendingTask
+                    }
                   ></TaskDescription>
                 </div>
                 <div className="progess-box">
@@ -201,7 +222,11 @@ function TaskPage() {
                     isAdmin={isAdmin}
                     email={email}
                     id={id}
-                    tasks={searchValue==''?allTask?.onGoingTask:filteredTask?.onGoingTask}
+                    tasks={
+                      searchValue == ""
+                        ? allTask?.onGoingTask
+                        : filteredTask?.onGoingTask
+                    }
                   ></TaskDescription>
                 </div>
                 <div className="completed-box">
@@ -213,7 +238,11 @@ function TaskPage() {
                     isAdmin={isAdmin}
                     email={email}
                     id={id}
-                    tasks={searchValue==''?allTask?.completedTask:filteredTask?.completedTask}
+                    tasks={
+                      searchValue == ""
+                        ? allTask?.completedTask
+                        : filteredTask?.completedTask
+                    }
                   ></TaskDescription>
                 </div>
               </div>
@@ -266,9 +295,7 @@ function TaskPage() {
                   ?.map((task: any, index: number) => {
                     return (
                       <div key={index} className="my-task-name">
-                        <div className="my-task-taskname">
-                          {task.taskName}
-                        </div>
+                        <div className="my-task-taskname">{task.taskName}</div>
                         <div className="my-task-taskname">{task.status}</div>
                       </div>
                     );

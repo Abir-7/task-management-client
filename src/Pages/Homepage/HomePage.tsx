@@ -14,15 +14,15 @@ function HomePage() {
   const { isAdmin, token } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
-  const [isSkip,setIsSkip]=useState(true)
-  const {data:projects,isLoading} = useGetAllProjectQuery('',{skip:isSkip});
-
-
+  const [isSkip, setIsSkip] = useState(true);
+  const { data: projects, isLoading } = useGetAllProjectQuery("", {
+    skip: isSkip,
+  });
 
   useEffect(() => {
-if(token){
-  setIsSkip(false)
-}
+    if (token) {
+      setIsSkip(false);
+    }
   }, [token]);
 
   useEffect(() => {
@@ -64,83 +64,85 @@ if(token){
   }, [isModal_Home_true]);
   //console.log(isModal_Home_true, "homepage");
   return (
-<>
-{(!isLoading && projects)?  <div className="homepage-container-with-modal">
-  <div id="show-modal2" className="show-modal">
-    <ModalHomepage></ModalHomepage>
-  </div>
-  <div className="homepage-container">
-    <div className="homepage-box1">
-      <h1>On Goning Project</h1>
-
-      {projects?.pendingProject.map((project, index) => (
-        <div key={index} className="task-description2">
-          <h3>{project.projectName}</h3>
-          <div className="description2">
-            <p>
-              <b> Description:</b> {project.description}
-            </p>
+    <>
+      {!isLoading && projects ? (
+        <div className="homepage-container-with-modal">
+          <div id="show-modal2" className="show-modal">
+            <ModalHomepage></ModalHomepage>
           </div>
-          <div className="time">
-            <h4>{project.date}</h4>{" "}
-            <div className="hompage-action">
-              <Link className="link" to={`/task/${project._id}`}>
-                View Update
-              </Link>
-              {isAdmin && (
-                <button
-                  onClick={() =>
-                    updatePoject({ id: project._id, isCompleted: true })
-                  }
-                >
-                  Click Here if Completed
-                </button>
-              )}
+          <div className="homepage-container">
+            <div className="homepage-box1">
+              <h1>On Goning Project</h1>
+
+              {projects?.pendingProject.map((project, index) => (
+                <div key={index} className="task-description2">
+                  <h3>{project.projectName}</h3>
+                  <div className="description2">
+                    <p>
+                      <b> Description:</b> {project.description}
+                    </p>
+                  </div>
+                  <div className="time">
+                    <h4>{project.date}</h4>{" "}
+                    <div className="hompage-action">
+                      <Link className="link" to={`/task/${project._id}`}>
+                        View Update
+                      </Link>
+                      {isAdmin && (
+                        <button
+                          onClick={() =>
+                            updatePoject({ id: project._id, isCompleted: true })
+                          }
+                        >
+                          Click Here if Completed
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="homepage-box2">
+              <h1>Completed Project</h1>
+
+              {projects?.completedProject.map((project, index) => (
+                <div key={index} className="task-description2">
+                  <h3>{project.projectName}</h3>
+                  <div className="description2">
+                    <p>
+                      <b> Description:</b> {project.description}
+                    </p>
+                  </div>
+                  <div className="time">
+                    <h4>{project.date}</h4>{" "}
+                    <div className="hompage-action">
+                      <Link className="link" to={`/task/${project._id}`}>
+                        View Update
+                      </Link>
+                      {isAdmin || project.isCompleted ? (
+                        <></>
+                      ) : (
+                        <button
+                          onClick={() =>
+                            updatePoject({ id: project._id, isCompleted: true })
+                          }
+                        >
+                          Click Here if Completed
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      ))}
-    </div>
-
-    <div className="homepage-box2">
-      <h1>Completed Project</h1>
-
-      {projects?.completedProject.map((project, index) => (
-        <div key={index} className="task-description2">
-          <h3>{project.projectName}</h3>
-          <div className="description2">
-            <p>
-              <b> Description:</b> {project.description}
-            </p>
-          </div>
-          <div className="time">
-            <h4>{project.date}</h4>{" "}
-            <div className="hompage-action">
-              <Link className="link" to={`/task/${project._id}`}>
-                View Update
-              </Link>
-              {isAdmin || project.isCompleted ? (
-                <></>
-              ) : (
-                <button
-                  onClick={() =>
-                    updatePoject({ id: project._id, isCompleted: true })
-                  }
-                >
-                  Click Here if Completed
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-:<Loading></Loading>
-
-                  }  
-</>);
+      ) : (
+        <Loading></Loading>
+      )}
+    </>
+  );
 }
 
 export default HomePage;

@@ -5,7 +5,6 @@ import TaskPage from "../Pages/TaskPage/TaskPage";
 import UserLogin from "../Pages/UserLogin/UserLogin";
 import UserSignUp from "../Pages/UserSignUp/UserSignUp";
 import PrivetRouts from "./PrivetRoute";
-import MessagingPage from "../Pages/MessagingPage/MessagingPage";
 
 const router = createBrowserRouter([
   {
@@ -25,14 +24,6 @@ const router = createBrowserRouter([
         element: (
           <PrivetRouts>
             <TaskPage></TaskPage>
-          </PrivetRouts>
-        ),
-      },
-      {
-        path: "/chat",
-        element: (
-          <PrivetRouts>
-            <MessagingPage></MessagingPage>
           </PrivetRouts>
         ),
       },

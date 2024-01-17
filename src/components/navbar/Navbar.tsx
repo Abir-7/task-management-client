@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "./navbar.css";
-import { FaComments, FaHome } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { signOut } from "firebase/auth";
@@ -42,11 +42,6 @@ function Navbar() {
         <li>
           <Link className="link" to="/">
             <FaHome />
-          </Link>
-        </li>
-        <li>
-          <Link className="link" to="/chat">
-            <FaComments />
           </Link>
         </li>
         {location.pathname == "/" && (

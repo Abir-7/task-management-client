@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, deleteTaskData, deleteTaskResponse, getAllTask, updateProject, updateProjectResponse, updateTaskData } from "./interface";
+import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, deleteTaskData, deleteTaskResponse, getAllTask, updateProject, updateProjectResponse, updateTaskData, updateTaskResponse } from "./interface";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://task-management-system-server-tau.vercel.app/",
+    baseUrl: "https://task-management-system-server-tau.vercel.app",
     prepareHeaders: (headers) => {
       const token = `Bearer ${localStorage.getItem("access-token")}`;
       if (token) {
@@ -17,14 +17,14 @@ export const api = createApi({
   endpoints: (build) => ({
     addNewUser: build.mutation({
       query: (data) => ({
-        url: `addNewUser`,
+        url: `/addNewUser`,
         method: "POST",
         body: data,
       })
     }),
     addProject: build.mutation<updateProjectResponse,addProject>({
       query: (data) => ({
-        url: `addProject`,
+        url: `/addProject`,
         method: "POST",
         body: data,
       }),
@@ -32,7 +32,7 @@ export const api = createApi({
     }),
     updateProject: build.mutation<addProjectResponse,updateProject>({
       query: (data) => ({
-        url: `updateProject`,
+        url: `/updateProject`,
         method: "PUT",
         body: data,
       }),
@@ -41,22 +41,22 @@ export const api = createApi({
     getAllProject: build.query<GetAllProject,any>({
       // GetAllProject
       query: () => ({
-        url: `getAllProject`,
+        url: `/getAllProject`,
       }),
       providesTags:["newProjects"]
     }),
 
     addTask: build.mutation<addTaskResponse, addTaskData>({
       query: (data) => ({
-        url: `addTask`,
+        url: `/addTask`,
         method: "POST",
         body: data,
       }),
       invalidatesTags:['newTask']
     }),
-    updateTask: build.mutation<addTaskResponse, updateTaskData>({
+    updateTask: build.mutation<updateTaskResponse, updateTaskData>({
       query: (data) => ({
-        url: `updateTask`,
+        url: `/updateTask`,
         method: "PUT",
         body: data,
       }),
@@ -64,7 +64,7 @@ export const api = createApi({
     }),
     deletedTask: build.mutation<deleteTaskResponse, deleteTaskData>({
       query: (data) => ({
-        url: `deleteTask`,
+        url: `/deleteTask`,
         method: "DELETE",
         body: data,
       }),
@@ -72,13 +72,15 @@ export const api = createApi({
     }),
     getAllTask: build.query<getAllTask, any>({
       query: ({id}) => ({
-        url: `getAllTask/${id}`,
+        url: `/getAllTask/${id}`,
+
       }),
-      providesTags:['newTask']
+      providesTags:['newTask'],
+
     }),
     getAllUser: build.query<allUser, void>({
       query: () => ({
-        url: 'getAllUser',
+        url: '/getAllUser',
       }),
     }),
   }),
