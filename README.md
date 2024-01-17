@@ -20,7 +20,7 @@ A Website where an organization can add, manage, update their task.
 
 
 # Technology :
- -- Html, Css, tailwind Css, DaisyUI, React, JavaScript, Nodejs, ExpressJS, MongoDb, Rest Api,Redux,typescript
+ -- Html, Css, tailwind Css, DaisyUI, React, JavaScript, Nodejs, ExpressJS, MongoDb-Mongoose, Rest Api, Redux, Typescript
 
 
 Live Site Link: https://task-management-system-ebaff.web.app/
