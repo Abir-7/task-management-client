@@ -6,17 +6,17 @@ import {
   updateProfile,
 } from "firebase/auth";
 import auth from "../../../firebaseConfig/firebase";
-
+import axios from "axios";
 interface userInfo {
   userName: string;
   email: string;
   token: any;
   isUserLoading: boolean;
-
+  profileImage:string,
   isUserInfoError: boolean;
   userInfoError: any;
 
-  isSignupSuccessfull: boolean;
+  isSignupSuccessfull: string|boolean;
 
   isAdmin: boolean;
   isAdminError: boolean;
@@ -28,11 +28,11 @@ const initialState: userInfo = {
   email: "",
   token: "",
   isUserLoading: true,
-
+  profileImage:'',
   isUserInfoError: false,
   userInfoError: "",
 
-  isSignupSuccessfull: false,
+  isSignupSuccessfull: '',
 
   isAdmin: false,
   isAdminError: false,
@@ -46,21 +46,34 @@ export const userReg = createAsyncThunk(
     email,
     mobile,
     password,
+    formData,
   }: {
     name: string;
     email: string;
     mobile: number;
     password: string;
+    formData: any;
   }) => {
     try {
       const data = await createUserWithEmailAndPassword(auth, email, password);
       //console.log(data);
+      const imageHoistingURL = `https://api.imgbb.com/1/upload?key=a7e4f34c37cbe7ac4c1833f93738721a`;
+
       if (data.user && auth.currentUser) {
-        await updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: null,
-        });
-        const res: any = await fetch(
+
+        const response= await axios.post(imageHoistingURL,formData)
+       
+          if (!response.data.status) {
+            deleteUser(auth.currentUser!);
+            throw response.status + " " + "Server Error";
+          } else {
+            updateProfile(auth.currentUser!, {
+              displayName: name,
+              photoURL: response.data.data.display_url,
+            });
+          }
+          console.log(response.data,'image')
+        const res = await fetch(
           "https://task-management-system-server-tau.vercel.app/addNewUser",
           {
             method: "POST",
@@ -72,21 +85,20 @@ export const userReg = createAsyncThunk(
               name: name,
               mobile: mobile,
               role: "user",
+              photoURL: response.data.data.display_url
             }),
           }
         );
         if (!res.ok) {
-          // Handle the error based on the status code
-          //console.log(`Error: ${res.status} - ${res.statusText}`, "userslice");
           await deleteUser(auth.currentUser);
           throw res.status + " " + "Server Error";
-        } else {
-          //console.log(res.ok, "userslice2");
+        } 
+        else {
+          return {
+            name: data.user.displayName ? data.user.displayName : "",
+            email: data.user.email ? data.user.email : "",profileImage:response.data.data.display_url
+          };
         }
-        return {
-          name: data.user.displayName ? data.user.displayName : "",
-          email: data.user.email ? data.user.email : "",
-        };
       } else {
         if (auth.currentUser) {
           await deleteUser(auth.currentUser);
@@ -94,6 +106,7 @@ export const userReg = createAsyncThunk(
         return {
           name: "",
           email: "",
+          profileImage:'',
         };
       }
     } catch (error: any) {
@@ -162,10 +175,11 @@ export const userInfoSlice = createSlice({
     },
     setUserInfo: (
       state,
-      { payload }: PayloadAction<{ email: string; name: string }>
+      { payload }: PayloadAction<{ email: string; name: string,photoURL:string }>
     ) => {
       state.email = payload.email;
       state.userName = payload.name;
+      state.profileImage=payload.photoURL
     },
     setUserLoading: (state, { payload }: PayloadAction<boolean>) => {
       state.isUserLoading = payload;
@@ -185,13 +199,14 @@ export const userInfoSlice = createSlice({
       })
       .addCase(
         userReg.fulfilled,
-        (state, action: PayloadAction<{ name: string; email: string }>) => {
+        (state, action: PayloadAction<{ name: string; email: string,profileImage:string }>) => {
           state.userName = action.payload.name;
           state.email = action.payload.email;
           state.isUserLoading = false;
           state.isUserInfoError = false;
           state.userInfoError = "";
           state.isSignupSuccessfull = true;
+          state.profileImage=action.payload.profileImage
         }
       )
       .addCase(userReg.rejected, (state, action) => {
@@ -253,6 +268,6 @@ export const userInfoSlice = createSlice({
   },
 });
 
-export const { setSingupStatus, setUserInfo, setUserLoading,setToken } =
+export const { setSingupStatus, setUserInfo, setUserLoading, setToken } =
   userInfoSlice.actions;
 export default userInfoSlice.reducer;

@@ -27,7 +27,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any | null) => {
       if (user) {
-        //console.log('useeefact')
+        console.log(user)
         const email = user.email;
         console.log(email);
         fetch("https://task-management-system-server-tau.vercel.app/jwt", {
@@ -43,7 +43,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
             localStorage.setItem("access-token", data.token);
             dispatch(setToken(data.token));
             dispatch(
-              setUserInfo({ name: user.displayName, email: user.email })
+              setUserInfo({ name: user.displayName, email: user.email,photoURL:user.photoURL })
             );
             dispatch(setUserLoading(false));
             dispatch(checkAdmin(user.email));
@@ -52,7 +52,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
       } else {
         signOut(auth);
         dispatch(setUserLoading(false));
-        dispatch(setUserInfo({ name: "", email: "" }));
+        dispatch(setUserInfo({ name: "", email: "",photoURL:'' }));
         localStorage.removeItem("access-token");
       }
     });
@@ -74,7 +74,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
       return children;
     } else {
       signOut(auth);
-      dispatch(setUserInfo({ name: "", email: "" }));
+      dispatch(setUserInfo({ name: "", email: "",photoURL:'' }));
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>
       );

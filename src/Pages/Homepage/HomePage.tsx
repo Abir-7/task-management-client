@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import Loading from "../../components/Loading/Loading";
 
 function HomePage() {
-  const { isAdmin, token } = useSelector((state: RootState) => state.userInfo);
+  const { isAdmin, token,email } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
   const [isSkip, setIsSkip] = useState(true);
@@ -20,10 +20,10 @@ function HomePage() {
   });
 
   useEffect(() => {
-    if (token) {
+    if (token && email) {
       setIsSkip(false);
     }
-  }, [token]);
+  }, [token ,email]);
 
   useEffect(() => {
     if (isSuccess) {

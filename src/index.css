@@ -16,7 +16,6 @@ body {
   margin-right: auto;
 }
 
-
 .custom-swal-container {
   width: 200px; /* Set the desired width */
   height: 100px; /* Set the desired height */
@@ -24,7 +23,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-
 
 .navbar {
   display: flex;
@@ -609,6 +607,27 @@ fieldset {
   border-radius: 5px;
   border: 2px solid var(--main-color);
 }
+.form input[type=file]{
+  background-color: var(--secondary-color);
+  color: black;
+}
+.form input[type=file]::file-selector-button {
+  margin-top: -5px;
+  margin-bottom: -5px;
+  margin-left: -5px;
+  margin-right: 10px;
+  border: none;
+  background: var(--main-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: var(--secondary-color);
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+}
+
+input[type=file]::file-selector-button:hover {
+  background: var(--main-hover-color);
+}
 .form input[type="submit"] {
   width: 100%;
   padding: 10px;
@@ -698,7 +717,7 @@ fieldset {
   width: 2px;
   background-color: #9f65fc;
 }
-.homepage-box1{
+.homepage-box1 {
   min-height: 100px;
 }
 .hompage-action {
@@ -717,7 +736,7 @@ fieldset {
   background-color: rgba(132, 0, 255, 0.048);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.253);
 }
-.hompage-action button{
+.hompage-action button {
   border: none;
   background-color: var(--main-color);
   padding: 2px 9px;
@@ -725,9 +744,8 @@ fieldset {
   color: var(--secondary-color);
   transition: all 0.4s;
 }
-.hompage-action button:hover{
-background-color: var(--main-hover-color);
-
+.hompage-action button:hover {
+  background-color: var(--main-hover-color);
 }
 @media only screen and (min-width: 380px) and (max-width: 910px) {
   .task-full-container {
@@ -767,6 +785,7 @@ background-color: var(--main-hover-color);
   }
 }
 @media only screen and (max-width: 600px) {
+ 
   .homepage-container {
     height: calc(100% - 20px);
     margin: 10px;
@@ -785,8 +804,9 @@ background-color: var(--main-hover-color);
   }
 
   .profile-option {
-    right: -30px;
-    top: -58px;
+    width: 50px;
+    left:calc(26vw);
+    top: -50px;
   }
   .profile-option.actives {
     display: flex;

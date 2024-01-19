@@ -10,14 +10,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <PrivetRouts>
+
         <MainPage></MainPage>
-      </PrivetRouts>
+
     ),
     children: [
       {
         path: "/",
-        element: <HomePage></HomePage>,
+        element: <PrivetRouts><HomePage></HomePage></PrivetRouts>,
       },
       {
         path: "/task/:id",

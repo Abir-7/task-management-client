@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./taskpage.css";
+
 import { BiTask } from "react-icons/bi";
 import { IoMdSearch } from "react-icons/io";
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
@@ -19,6 +19,7 @@ type AssignedPerson = {
   _id: string;
   email: string;
   name: string;
+  photoURL:string
 };
 
 interface Task {
@@ -262,7 +263,7 @@ function TaskPage() {
                         data-tooltip-content={person?.name}
                         className="member-slide"
                         key={index}
-                        src={img} //to do add real image
+                        src={person.photoURL?person.photoURL:img} //to do add real image
                         alt=""
                       />
                       <Tooltip
