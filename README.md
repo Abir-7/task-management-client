@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Task Management System
 
-Currently, two official plugins are available:
+A Website where an organization can add, manage, update their task. 
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Admin can add project.
+* Admin can add task for that project
+* Admin can delete task if needed.
+* User can see and update the status of their task.
+* Secure api using Jwt.
+* All State are manage by Redux toolkit.
+* Data fetch(read,write,update,delete) is managed by Redux RTK query
+* Mobile Responsive
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+ ## Admin Info:
+ Email: md.tazwarul.islam.07@gmail.com
+ Pass: 123456
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+# Technology :
+ -- Html, Css, React, JavaScript, Nodejs, ExpressJS, MongoDb-Mongoose, Rest Api, Redux, Typescript
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+Live Site Link: https://task-management-system-ebaff.web.app/
+
+GitHub Server-side Link: https://github.com/Abir-7/task-management-server
+
+Website is not Complete yet. Few more functionality will be added and if any bug found, will be updated.
