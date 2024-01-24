@@ -144,7 +144,6 @@ function ChatPage() {
               (singleConnection, index) => {
                 return (
                   <div
-                    onClick={() => setSelectedIndex_1(index + 1)}
                     style={
                       index + 1 == selectedIndex_1
                         ? { backgroundColor: "#9f65fc", color: "#ffffff" }
@@ -236,14 +235,16 @@ function ChatPage() {
                       {singleConnection?.persons
                         ?.filter((p) => p.email !== email)
                         .map((p, index) => (
-                          <p className="online-notification" key={index}>
-                            <div>{p.name} </div>
+                          <div className="online-notification">
+                            <div>
+                              <p key={index}>{p.name} </p>
+                            </div>
                             <div className="notify">
                               {onlineUsers.includes(p.email) && (
                                 <FaRegDotCircle />
                               )}
-                            </div>{" "}
-                          </p>
+                            </div>
+                          </div>
                         ))}
                     </div>
                   </div>

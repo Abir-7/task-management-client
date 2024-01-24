@@ -15,22 +15,39 @@ interface Props {
   receverPerson: { email: string; name: string };
 }
 function MessageBox({ email, connectionID, receverPerson }: Props) {
+
   const {
     data: data1,
     refetch,
     isLoading,
-  } = useGetMessageByIdQuery({ cId: connectionID }, { skip: !connectionID });
+  } = useGetMessageByIdQuery({ cId: connectionID }, { skip:!receverPerson });
+
+
+  useEffect(() => {
+    if (connectionID ||receverPerson.email) {
+      refetch();
+      
+    }
+    setData(data1)
+    // if (postMsgData?.postMessage) {
+    //   socket.emit("message", connectionID, postMsgData?.allMessage);
+    // }
+  }, [connectionID,receverPerson.email]);
+
+
 
 
   const [data, setData] = useState<getMessageResponse>();
   console.log(data1);
   useEffect(() => {
     if (socket) {
-      socket.on("message", (message: [singleMsg]) => {
+      socket.on("message", (message: {id:string,getMessage:[singleMsg]}) => {
         console.log(message, "121212121");
         //setData(message)
         if (message) {
-          setData({ allMessage: message });
+         if(message.id==connectionID){
+          setData({ allMessage: message.getMessage });
+         }
         }
       });
     }
@@ -46,15 +63,7 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
 
   console.log(postError, postSuccess, postMsgData, "ssssssssssssss");
   //console.log( isLoading, isError, error, connectionID);
-  useEffect(() => {
-    if (connectionID || data1?.allMessage) {
-      refetch();
-      setData(data1);
-    }
-    if (postMsgData?.postMessage) {
-      socket.emit("message", connectionID, postMsgData?.allMessage);
-    }
-  }, [data1?.allMessage, connectionID]);
+
 
 
 

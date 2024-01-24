@@ -15,11 +15,15 @@ function HomePage() {
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
 
-  const { data: projects, isLoading } = useGetAllProjectQuery("", {
+  const { data: projects, isLoading ,refetch} = useGetAllProjectQuery("", {
     skip: (token && email && !isUserLoading )?false:true,
   });
 
-
+useEffect(()=>{
+if(token){
+  refetch()
+}
+},[token,email ])
 
   useEffect(() => {
     if (isSuccess) {

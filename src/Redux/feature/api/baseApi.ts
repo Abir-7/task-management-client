@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, allUserChat, createConnection, createConnectionResponse, deleteTaskData, deleteTaskResponse, getAllTask, getConnectionResponse, getConnectionStatusResponse, getMessageResponse, getPostMessageResponse, updateProject, updateProjectResponse, updateTaskData, updateTaskResponse } from "./interface";
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://task-management-server-16on.onrender.com",
+    baseUrl: "http://localhost:3000",
     prepareHeaders: (headers) => {
       const token = `Bearer ${localStorage.getItem("access-token")}`;
       if (token) {

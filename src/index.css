@@ -785,13 +785,8 @@ input[type="file"]::file-selector-button:hover {
   margin-left: 5px;
   height: 100%;
 }
-.user-in-chat {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
+
+
 .chat-user-profile img {
   width: 50px;
   height: 50px;
@@ -855,7 +850,6 @@ input[type="file"]::file-selector-button:hover {
   box-sizing: border-box;
   width: 100%;
   margin: 5px 0px;
-
 }
 .text-msg-box p {
   width: 45%;
@@ -866,6 +860,57 @@ input[type="file"]::file-selector-button:hover {
   border-radius: 5px;
 }
 
+.accept-btn {
+  color: var(--main-color);
+  font-size: 20px;
+  margin-left: auto;
+  transition: transform 0.4s;
+}
+.accept-btn:hover {
+  transform: scale(1.1);
+}
+.accept-btn:active {
+  transform: scale(1);
+}
+.online-notification {
+
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:7px;
+}
+.online-notification .notify {
+  margin-top: 7px;
+  color: green;
+  margin-left: auto;
+}
+
+.user-in-chat {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  border: 1px solid var(--main-color);
+}
+.chat-user-name{
+width: 100%;
+}
+.send-req {
+  color: var(--main-color);
+  font-size: 19px;
+  margin-left: auto;
+  transition: transform 0.4s;
+}
+.send-req:hover {
+transform: scale(1.1);
+}
+.send-req:active {
+  transform: scale(1.0);
+  }
 @media only screen and (min-width: 700px) and (max-width: 900px) {
   .chat-container {
     position: relative;
@@ -1019,27 +1064,25 @@ input[type="file"]::file-selector-button:hover {
 }
 
 @media only screen and (max-width: 600px) {
-
   .cbox-3 {
-
     height: calc(100vh - 60px);
-
   }
 
-  .text-msg-box p {width: 100%;}
+  .text-msg-box p {
+    width: 100%;
+  }
   .messagebox {
     height: calc(100vh - 145px);
   }
   .cbox-2 {
     height: calc(100vh - 50px);
   }
-  .cbox-1{
+  .cbox-1 {
     z-index: 10;
     overflow-y: auto;
     height: calc(100% - 0px);
   }
   .cbox-1 .slide2 {
-
     display: block;
     position: fixed;
     left: 10px;
