@@ -763,8 +763,6 @@ input[type="file"]::file-selector-button:hover {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.356);
   flex-grow: 1;
   padding: 0px 5px;
-
-  height: calc(100vh - 0px);
 }
 .cbox-3 {
   flex-basis: 300px;
@@ -785,7 +783,6 @@ input[type="file"]::file-selector-button:hover {
   margin-left: 5px;
   height: 100%;
 }
-
 
 .chat-user-profile img {
   width: 50px;
@@ -818,13 +815,19 @@ input[type="file"]::file-selector-button:hover {
   background-color: var(--main-color);
   color: var(--secondary-color);
 }
+
+.msg-container {
+  height: 100vh;
+  position: relative;
+}
 .messagebox {
   padding: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+
   height: calc(100vh - 97px);
-  overflow-y: auto;
+  overflow-y: auto !important;
+  z-index: 20;
 }
 
 .sendButton button {
@@ -873,12 +876,11 @@ input[type="file"]::file-selector-button:hover {
   transform: scale(1);
 }
 .online-notification {
-
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap:7px;
+  gap: 7px;
 }
 .online-notification .notify {
   margin-top: 7px;
@@ -896,8 +898,8 @@ input[type="file"]::file-selector-button:hover {
   margin: 10px 0;
   border: 1px solid var(--main-color);
 }
-.chat-user-name{
-width: 100%;
+.chat-user-name {
+  width: 100%;
 }
 .send-req {
   color: var(--main-color);
@@ -906,11 +908,12 @@ width: 100%;
   transition: transform 0.4s;
 }
 .send-req:hover {
-transform: scale(1.1);
+  transform: scale(1.1);
 }
 .send-req:active {
-  transform: scale(1.0);
-  }
+  transform: scale(1);
+}
+
 @media only screen and (min-width: 700px) and (max-width: 900px) {
   .chat-container {
     position: relative;
@@ -1019,6 +1022,11 @@ transform: scale(1.1);
     flex-grow: 1;
     padding: 0px 5px;
   }
+  .messagebox {
+    border: 1px solid black;
+    background-color: aqua;
+   
+  }
   .cbox-3 {
     flex-basis: 240px;
     height: calc(100vh - 0px);
@@ -1073,6 +1081,7 @@ transform: scale(1.1);
   }
   .messagebox {
     height: calc(100vh - 145px);
+    overflow-y: auto !important;
   }
   .cbox-2 {
     height: calc(100vh - 50px);

@@ -28,11 +28,12 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
       refetch();
       
     }
-    setData(data1)
+    if(data1?.allMessage.length){ setData(data1)}
+
     // if (postMsgData?.postMessage) {
     //   socket.emit("message", connectionID, postMsgData?.allMessage);
     // }
-  }, [connectionID,receverPerson.email]);
+  }, [connectionID,receverPerson.email,data1?.allMessage.length]);
 
 
 
@@ -85,6 +86,7 @@ const [msg,setMessage]=useState('')
         <div className="msg-container">
           <div className="chat-head"> {receverPerson?.name}</div>{" "}
           <div className="messagebox">
+            <div>
             {data?.allMessage?.map((msg, index) => (
               <div
                 style={
@@ -111,6 +113,7 @@ const [msg,setMessage]=useState('')
                 </p>
               </div>
             ))}
+            </div>
           </div>
           <div className="send-box">
             <div className="sendInput">
