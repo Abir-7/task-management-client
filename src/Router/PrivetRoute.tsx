@@ -30,7 +30,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
         //console.log(user)
     
         //console.log(email);
-        fetch("http://localhost:3000/jwt", {
+        fetch("https://task-management-server-16on.onrender.com/jwt", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

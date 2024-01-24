@@ -74,7 +74,7 @@ export const userReg = createAsyncThunk(
           }
           //console.log(response.data,'image')
         const res = await fetch(
-          "http://localhost:3000/addNewUser",
+          "https://task-management-server-16on.onrender.com/addNewUser",
           {
             method: "POST",
             headers: {
@@ -123,7 +123,7 @@ export const checkAdmin = createAsyncThunk(
     const token = localStorage.getItem("access-token");
     try {
       const response = await fetch(
-        `http://localhost:3000/checkAdmin?email=${email}`,
+        `https://task-management-server-16on.onrender.com/checkAdmin?email=${email}`,
         {
           method: "GET",
           headers: {

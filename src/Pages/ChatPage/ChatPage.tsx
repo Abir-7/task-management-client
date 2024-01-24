@@ -57,7 +57,7 @@ function ChatPage() {
   }, [email, connectionData, statusData]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedIndex_1, setSelectedIndex_1] = useState(0);
+
 
   const [connectionID, setConnectionId] = useState("");
   const [receverPerson, setReceverPerson] = useState<{
@@ -144,11 +144,7 @@ function ChatPage() {
               (singleConnection, index) => {
                 return (
                   <div
-                    style={
-                      index + 1 == selectedIndex_1
-                        ? { backgroundColor: "#9f65fc", color: "#ffffff" }
-                        : {}
-                    }
+          
                     className="user-in-chat"
                     key={index + 1}
                   >
