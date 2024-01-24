@@ -40,7 +40,7 @@ function ChatPage() {
       isError: isConnectError,
     },
   ] = useCreateConnectionMutation();
-  //console.log(isConnectError, isConnectSuccess, connectionData, "request");
+  console.log(isConnectError, isConnectSuccess, connectionData, "request");
   const [ConnectionStatus, { data: statusData, isSuccess, isError }] =
     useUpdateConnectionStatusMutation();
 
@@ -135,7 +135,7 @@ function ChatPage() {
         </div>
         <div>
           <div className="chat-title">
-            <h3>Pending Connection</h3>
+            <h3 style={{ textAlign: "center" }}>Pending Connection</h3>
           </div>
           <div className="pending-connection">
             {getConnectionData?.getAllConnection?.allPendingConnection.length ==
@@ -194,9 +194,9 @@ function ChatPage() {
         </div>
         <div>
           <div className="chat-title">
-            <h3>Your Connections</h3>
+            <h3 style={{ textAlign: "center" }}>Your Connections</h3>
           </div>
-          <div>
+          <div className="allFriends">
             {getConnectionData?.getAllConnection?.allAcceptedConnection?.map(
               (singleConnection, index) => {
                 return (
@@ -260,10 +260,12 @@ function ChatPage() {
           connectionID={connectionID}
         ></MessageBox>
       </div>
-      <div id="slide2" className="chat-box cbox-3">
+
+      <div id="slide2" className="chat-box cbox-3 ">
         <div onClick={() => openSlider(2)} className="slide1">
           <RiMenuFoldFill />
         </div>
+
         <div className="chat-title">
           <h3>All Users</h3>
         </div>
@@ -286,16 +288,22 @@ function ChatPage() {
                   {user.email == email ? "You" : user?.name}{" "}
                   {user.role == "admin" && <>({user.role})</>}
                 </div>
-                {user.email !== email && getConnectionData?.getAllConnection?.acceptedConnectionEmail.includes(user.email)!==true  && (
-                  <div
-                    onClick={() =>
-                      createConnection({ email1: email, email2: user.email })
-                    }
-                    className="send-req"
-                  >
-                    <IoPersonAddOutline />
-                  </div>
-                )}
+                {user.email !== email &&
+                  getConnectionData?.getAllConnection?.acceptedConnectionEmail.includes(
+                    user.email
+                  ) !== true && (
+                    <div
+                      onClick={() =>
+                        createConnection({
+                          email1: email,
+                          email2: user.email,
+                        })
+                      }
+                      className="send-req"
+                    >
+                      <IoPersonAddOutline />
+                    </div>
+                  )}
               </div>
             );
           })}

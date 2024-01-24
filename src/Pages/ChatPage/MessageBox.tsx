@@ -44,7 +44,7 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
     { data: postMsgData, isError: postError, isSuccess: postSuccess },
   ] = usePostMessageMutation();
 
-  //console.log(postError, postSuccess, postMsgData, "ssssssssssssss");
+  console.log(postError, postSuccess, postMsgData, "ssssssssssssss");
   //console.log( isLoading, isError, error, connectionID);
   useEffect(() => {
     if (connectionID || data1?.allMessage) {
@@ -56,21 +56,24 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
     }
   }, [data1?.allMessage, connectionID]);
 
-  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const msg = (e.target as HTMLFormElement).msginput.value;
+
+
+const [msg,setMessage]=useState('')
+  const sendMessage = ():void => {
     // console.log(msg);
+   if(msg!==''){
     sendMsg({
       connect_Id: connectionID,
       msgData: { email: email, message: msg },
     });
-    e.currentTarget.reset()
+   }
+   setMessage('')
   };
 
   return (
     <>
       {connectionID ? (
-        <>
+        <div className="msg-container">
           <div className="chat-head"> {receverPerson?.name}</div>{" "}
           <div className="messagebox">
             {data?.allMessage?.map((msg, index) => (
@@ -100,19 +103,19 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
               </div>
             ))}
           </div>
-          <form onSubmit={sendMessage}>
+          <div className="send-box">
             <div className="sendInput">
-              <input name="msginput" type="text" />
+              <input value={msg} onChange={(e)=>setMessage(e.target.value)} name="msginput" type="text" />
               <div className="sendButton">
-                <button type="submit">
-                  <BiSend />
+                <button   onClick={()=>sendMessage()} type="submit">
+                <BiSend />
                 </button>
               </div>
             </div>
-          </form>
-        </>
+          </div>
+        </div>
       ) : (
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
+        <div style={{ textAlign: "center", marginTop: "10px",display:'flex',justifyContent:'center',alignItems:'center' ,height:'60vh' }}>
           <h3>Please select a user</h3>
         </div>
       )}
