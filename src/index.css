@@ -607,11 +607,11 @@ fieldset {
   border-radius: 5px;
   border: 2px solid var(--main-color);
 }
-.form input[type=file]{
+.form input[type="file"] {
   background-color: var(--secondary-color);
   color: black;
 }
-.form input[type=file]::file-selector-button {
+.form input[type="file"]::file-selector-button {
   margin-top: -5px;
   margin-bottom: -5px;
   margin-left: -5px;
@@ -622,10 +622,10 @@ fieldset {
   border-radius: 5px;
   color: var(--secondary-color);
   cursor: pointer;
-  transition: background .2s ease-in-out;
+  transition: background 0.2s ease-in-out;
 }
 
-input[type=file]::file-selector-button:hover {
+input[type="file"]::file-selector-button:hover {
   background: var(--main-hover-color);
 }
 .form input[type="submit"] {
@@ -747,7 +747,283 @@ input[type=file]::file-selector-button:hover {
 .hompage-action button:hover {
   background-color: var(--main-hover-color);
 }
+
+.chat-container {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  gap: 2px;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.chat-box {
+  width: calc(100% - 4px);
+  padding: 3px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.chat-container .chat-box .chat-title {
+  display: flex;
+  justify-content: center;
+}
+.cbox-2 {
+  z-index: 0;
+  box-shadow: 0 0px 10px rgba(137, 43, 226, 0.753);
+}
+
+.user-in-chat {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 3px 4px;
+  gap: 10px;
+  margin: 10px 0px;
+  box-shadow: 0 0 4px rgba(137, 43, 226, 0.753);
+  position: relative;
+  overflow: hidden;
+}
+.layer {
+  border-radius: 5px;
+  position: absolute;
+  left: 0;
+  background-color: #9f65fc;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  transition: transform 0.4s;
+}
+.user-in-chat:hover .layer {
+  z-index: 0;
+  transform: translateX(0px);
+}
+.chat-user-profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  z-index: 1;
+}
+.chat-user-name {
+  transition: color 0.4s;
+  z-index: 1;
+}
+.user-in-chat:hover .chat-user-name {
+  color: var(--secondary-color);
+}
+.chat-user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.cbox-2 {
+  display: flex;
+  flex-direction: column;
+}
+.cbox-2 .messagebox {
+  flex-grow: 1;
+}
+
+.cbox-2 .sendInput {
+  box-sizing: border-box;
+  height: 40px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sendButton button {
+  background-color: transparent;
+  border: none;
+  font-size: 27px;
+  padding-top: 4px;
+  transition: color 0.4s;
+  color: var(--main-color);
+}
+.sendButton button:hover {
+  color: #7131d8;
+}
+.sendButton button:active {
+  transform: translateX(1px);
+}
+.sendInput input {
+  width: 100%;
+  border: 1px solid var(--main-color);
+  border-radius: 10px;
+  padding: 7px;
+  box-sizing: border-box;
+}
+.sendInput input:focus {
+  outline: 1px solid var(--main-color);
+}
+.messagebox {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  gap: 10px;
+  margin: 0 10px;
+}
+.text-msg-box {
+  display: flex;
+}
+.text-msg {
+  padding: 10px 15px;
+  border: 2px solid var(--main-color);
+  width: 40%;
+  border-radius: 10px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.267);
+}
+.chat-head {
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+  padding: 5px;
+  background-color: var(--main-color);
+  color: var(--secondary-color);
+}
+.accept-btn {
+  margin-left: auto;
+  z-index: 2;
+  margin-right: 2px;
+}
+.accept-btn p {
+  padding: 5px;
+
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  box-sizing: border-box;
+  font-size: 25px;
+  transition: border 0.4s, color 0.4s;
+}
+.user-in-chat:hover .accept-btn p {
+  color: var(--secondary-color);
+}
+.accept-btn p:hover {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.377);
+}
+
+.pending-connection {
+  min-height: 50px;
+}
+
+.cbox-3 .slide1 {
+  display: none;
+}
+.cbox-1 .slide2 {
+  display: none;
+}
+.cbox-2 .slide2:hover {
+  color: var(--main-hover-color);
+}
+.cbox-3 .slide1:hover {
+  color: var(--main-hover-color);
+}
+
+.send-req {
+  z-index: 1;
+  margin-left: auto;
+  padding: 3px;
+  margin-right: 8px;
+  width: 20px;
+  height: 20px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: color 0.4s, transform 0.4s, box-shadow 0.4s;
+}
+.user-in-chat:hover .send-req {
+  color: var(--secondary-color);
+  transform: scale(1.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.411);
+}
+.user-in-chat:active .send-req {
+  transform: scale(1);
+}
+
+.online-notification{
+display: flex;
+gap:5px
+}
+
+.notify{
+  color: green;
+display: flex;
+align-items: center;
+margin-top: 3px;
+}
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 1600px) {
+  .chat-container {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .chat-container {
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+  }
+}
+
 @media only screen and (min-width: 380px) and (max-width: 910px) {
+  .chat-container {
+    display: flex;
+  }
+  .cbox-1 {
+    flex-basis: 45%;
+  }
+  .cbox-3 {
+    flex-basis: 45%;
+  }
+  .cbox-3 {
+    padding: 0 10px;
+    top: 55px;
+    position: absolute;
+    right: -100%;
+    width: 350px;
+    overflow-y: auto;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.432);
+    height: calc(100% - 65px);
+  }
+  .cbox-3.active2 {
+    right: 0px;
+  }
+  .cbox-2 {
+    width: 100%;
+  }
+
+  .cbox-3 .slide1 {
+    display: block;
+    position: fixed;
+    z-index: 20 !important;
+    color: var(--main-color);
+    right: 5px;
+  }
+  .cbox-1 .slide2 {
+    display: block;
+    position: fixed;
+    z-index: 20 !important;
+    color: var(--main-color);
+    left: 5px;
+  }
   .task-full-container {
     position: relative;
   }
@@ -784,11 +1060,75 @@ input[type=file]::file-selector-button:hover {
     margin: 20px;
   }
 }
+@media only screen and (max-width: 700px) {
+  .cbox-3 {
+    padding: 0 10px;
+    top: 55px;
+    position: absolute;
+    right: -1100%;
+    width: 350px;
+    overflow-y: auto;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.432);
+    height: calc(100% - 65px);
+    transition: right 0.4s;
+  }
+  .cbox-3.active2 {
+    right: 0px;
+  }
+
+  .cbox-3 .slide1 {
+    display: block;
+    position: fixed;
+    z-index: 20 !important;
+    color: var(--main-color);
+    right: 5px;
+  }
+  .cbox-1 .slide2 {
+    display: block;
+    position: fixed;
+    z-index: 20 !important;
+    color: var(--main-color);
+    left: 5px;
+    top: 55px;
+  }
+  .chat-container {
+    display: flex;
+  }
+  .cbox-2 {
+    width: 100%;
+  }
+  .cbox-1 {
+    position: absolute;
+    top: 0;
+    left: -150%;
+    background-color: var(--secondary-color);
+    height: calc(100% - 65px);
+    z-index: 20;
+    top: 55px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.411);
+    width: 350px;
+    transition: left 0.4s;
+  }
+  .cbox-1.active1 {
+    left: 0px;
+  }
+}
+@media screen and (min-width: 600px) and (max-width: 700px) {
+  .cbox-1 .slide2 {
+    display: block;
+    position: fixed;
+    z-index: 20 !important;
+    color: var(--main-color);
+    left: 55px;
+  }
+}
+
 @media only screen and (max-width: 600px) {
- 
   .homepage-container {
     height: calc(100% - 20px);
     margin: 10px;
+
     width: calc(100% - 20px);
   }
   .modal select {
@@ -805,7 +1145,7 @@ input[type=file]::file-selector-button:hover {
 
   .profile-option {
     width: 50px;
-    left:calc(26vw);
+    left: -120px;
     top: -50px;
   }
   .profile-option.actives {
@@ -895,5 +1235,32 @@ input[type=file]::file-selector-button:hover {
   }
   .my-task-section.active {
     right: 0;
+  }
+  .cbox-1 {
+    width: 250px;
+    left: -100%;
+  }
+  .cbox-3 {
+    width: 250px;
+    right: -100%;
+  }
+  .slide1 {
+    background-color: #ffffff;
+    padding-top: 2px;
+    padding-left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  .slide2 {
+    position: fixed;
+    top: 55px;
+    background-color: #ffffff;
+    padding-top: 2px;
+
+    padding-left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
   }
 }

@@ -28,7 +28,7 @@ function UserSignUp() {
     (state: RootState) => state.userInfo
   );
 
-  //console.log(userName,email)
+  ////console.log(userName,email)
 
   const {
     reset,
@@ -38,7 +38,7 @@ function UserSignUp() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data.image[0])
+    //console.log(data.image[0])
     setIsSignupLoading(true)
     const formData = new FormData()
         formData.append('image', data.image[0]);

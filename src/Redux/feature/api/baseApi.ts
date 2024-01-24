@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, deleteTaskData, deleteTaskResponse, getAllTask, updateProject, updateProjectResponse, updateTaskData, updateTaskResponse } from "./interface";
+import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, allUserChat, createConnection, createConnectionResponse, deleteTaskData, deleteTaskResponse, getAllTask, getConnectionResponse, getConnectionStatusResponse, getMessageResponse, getPostMessageResponse, updateProject, updateProjectResponse, updateTaskData, updateTaskResponse } from "./interface";
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://task-management-system-server-tau.vercel.app",
+    baseUrl: "https://task-management-server-16on.onrender.com",
     prepareHeaders: (headers) => {
       const token = `Bearer ${localStorage.getItem("access-token")}`;
       if (token) {
@@ -11,7 +11,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes:['newProjects','newTask']
+  tagTypes:['newProjects','newTask','connection','msg']
   ,
   endpoints: (build) => ({
     addNewUser: build.mutation({
@@ -51,7 +51,7 @@ export const api = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags:['newTask']
+      //invalidatesTags:['newTask']
     }),
     updateTask: build.mutation<updateTaskResponse, updateTaskData>({
       query: (data) => ({
@@ -82,7 +82,49 @@ export const api = createApi({
         url: '/getAllUser',
       }),
     }),
+    createConnection: build.mutation<createConnectionResponse, createConnection>({
+      query: (data) => ({
+        url: '/createConnection',
+        method:'POST',
+        body:data
+      }),
+      invalidatesTags:['connection']
+    }),
+    getConnection: build.query<getConnectionResponse, {email:string}>({
+      query: (data) => ({
+        url: `/geteConnection/${data.email}`
+      }),
+      providesTags:['connection'],
+    }),
+    updateConnectionStatus: build.mutation<getConnectionStatusResponse, {id:string}>({
+      query: (data) => ({
+        url: `/updateConnectionStatus/${data.id}`,
+        method:'PUT',
+        body:{status:'accepted'}
+      }),
+      invalidatesTags:['connection']
+    }),
+    postMessage: build.mutation<getPostMessageResponse, {connect_Id:string,msgData:{email:String,message:String}}>({
+      query: (data) => ({
+        url:`/postMsg`,
+        method:'POST',
+        body:data
+      }),
+      invalidatesTags:['msg']
+    }),
+    getMessageById:build.query<getMessageResponse,{cId:string}>({
+     query:(data) =>({
+      url:`getAllMessage/${data.cId}`
+     }),
+     providesTags:['msg']
+    }),
+    getUserChat: build.query<allUserChat, string>({
+      query: (email) => ({
+        url: `/getAllUserChat/${email}`,
+      }),
+      providesTags:['connection']
+    })
   }),
 });
 
-export const { useGetAllTaskQuery, useAddTaskMutation, useGetAllUserQuery,useAddProjectMutation,useLazyGetAllProjectQuery,useGetAllProjectQuery,useUpdateTaskMutation,useDeletedTaskMutation,useUpdateProjectMutation } = api;
+export const { useGetAllTaskQuery, useAddTaskMutation, useGetAllUserQuery,useAddProjectMutation,useLazyGetAllProjectQuery,useGetAllProjectQuery,useUpdateTaskMutation,useDeletedTaskMutation,useUpdateProjectMutation,useCreateConnectionMutation,useGetConnectionQuery,useUpdateConnectionStatusMutation,usePostMessageMutation,useGetMessageByIdQuery,useGetUserChatQuery} = api;

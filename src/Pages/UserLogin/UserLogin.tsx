@@ -25,7 +25,7 @@ function UserLogin() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data:Inputs) => {
-    //console.log(data)
+    ////console.log(data)
     dispatch(
       userLogin({
         email: data.email,

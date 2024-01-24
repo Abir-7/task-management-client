@@ -109,7 +109,7 @@ function TaskPage() {
     if (isTrue) {
       document.getElementById("show-modal")?.classList.add("active");
     } else {
-      document.getElementById("show-modal")?.classList.remove("active");
+      document.getElementById("show-modal")?.classList.remove("active"); 
     }
   }
 

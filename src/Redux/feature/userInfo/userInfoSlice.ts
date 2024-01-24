@@ -56,7 +56,7 @@ export const userReg = createAsyncThunk(
   }) => {
     try {
       const data = await createUserWithEmailAndPassword(auth, email, password);
-      //console.log(data);
+      ////console.log(data);
       const imageHoistingURL = `https://api.imgbb.com/1/upload?key=a7e4f34c37cbe7ac4c1833f93738721a`;
 
       if (data.user && auth.currentUser) {
@@ -72,9 +72,9 @@ export const userReg = createAsyncThunk(
               photoURL: response.data.data.display_url,
             });
           }
-          console.log(response.data,'image')
+          //console.log(response.data,'image')
         const res = await fetch(
-          "https://task-management-system-server-tau.vercel.app/addNewUser",
+          "https://task-management-server-16on.onrender.com/addNewUser",
           {
             method: "POST",
             headers: {
@@ -110,7 +110,7 @@ export const userReg = createAsyncThunk(
         };
       }
     } catch (error: any) {
-      //console.log(error.message);
+      ////console.log(error.message);
       throw error;
     }
   }
@@ -123,7 +123,7 @@ export const checkAdmin = createAsyncThunk(
     const token = localStorage.getItem("access-token");
     try {
       const response = await fetch(
-        `https://task-management-system-server-tau.vercel.app/checkAdmin?email=${email}`,
+        `https://task-management-server-16on.onrender.com/checkAdmin?email=${email}`,
         {
           method: "GET",
           headers: {
@@ -138,7 +138,7 @@ export const checkAdmin = createAsyncThunk(
         );
       }
       const data = await response.json();
-      //console.log(data,'checkAdmin');
+      ////console.log(data,'checkAdmin');
       return data.isAdmin;
     } catch (error) {
       throw error;
@@ -152,7 +152,7 @@ export const userLogin = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }) => {
     try {
       const data: any = await signInWithEmailAndPassword(auth, email, password);
-      //console.log(data, "user signin", data?._tokenResponse?.displayName);
+      ////console.log(data, "user signin", data?._tokenResponse?.displayName);
       return {
         name: data._tokenResponse.displayName
           ? data._tokenResponse.displayName
@@ -160,7 +160,7 @@ export const userLogin = createAsyncThunk(
         email: data._tokenResponse.email ? data._tokenResponse.email : "",
       };
     } catch (error: any) {
-      //console.log(error.message);
+      ////console.log(error.message);
       throw error;
     }
   }

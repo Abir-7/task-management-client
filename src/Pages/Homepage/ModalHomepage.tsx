@@ -18,7 +18,7 @@ function ModalHomepage() {
     (state: RootState) => state.modalStatus
   );
   const [addProject,{isSuccess,isError}] = useAddProjectMutation();
-  //console.log(data, isError, isLoading);
+  ////console.log(data, isError, isLoading);
 
   useEffect(()=>{
     if(isSuccess){

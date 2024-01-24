@@ -5,25 +5,34 @@ import TaskPage from "../Pages/TaskPage/TaskPage";
 import UserLogin from "../Pages/UserLogin/UserLogin";
 import UserSignUp from "../Pages/UserSignUp/UserSignUp";
 import PrivetRouts from "./PrivetRoute";
+import ChatPage from "../Pages/ChatPage/ChatPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-
-        <MainPage></MainPage>
-
-    ),
+    element: <MainPage></MainPage>,
     children: [
       {
         path: "/",
-        element: <PrivetRouts><HomePage></HomePage></PrivetRouts>,
+        element: (
+          <PrivetRouts>
+            <HomePage></HomePage>
+          </PrivetRouts>
+        ),
       },
       {
         path: "/task/:id",
         element: (
           <PrivetRouts>
             <TaskPage></TaskPage>
+          </PrivetRouts>
+        ),
+      },
+      {
+        path: "/chat",
+        element: (
+          <PrivetRouts>
+            <ChatPage></ChatPage>
           </PrivetRouts>
         ),
       },

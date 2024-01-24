@@ -40,6 +40,17 @@ function TaskDescription({
   console.log( "updated  data");
 
   useEffect(() => {
+
+    if(isDeleteSuccess){
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Task deleted Successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+
     if (isUpdateSuccess && (data?.updatedTask?.modifiedCount==1)) {
       Swal.fire({
         position: "center",

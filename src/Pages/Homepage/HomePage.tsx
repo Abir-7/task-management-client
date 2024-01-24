@@ -11,19 +11,15 @@ import Swal from "sweetalert2";
 import Loading from "../../components/Loading/Loading";
 
 function HomePage() {
-  const { isAdmin, token,email } = useSelector((state: RootState) => state.userInfo);
+  const { isAdmin, token,email,isUserLoading } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
-  const [isSkip, setIsSkip] = useState(true);
+
   const { data: projects, isLoading } = useGetAllProjectQuery("", {
-    skip: isSkip,
+    skip: (token && email && !isUserLoading )?false:true,
   });
 
-  useEffect(() => {
-    if (token && email) {
-      setIsSkip(false);
-    }
-  }, [token ,email]);
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -46,7 +42,7 @@ function HomePage() {
     }
   }, [isError, isSuccess]);
 
-  // console.log(projects, isAdmin);
+  // //console.log(projects, isAdmin);
   function showModal(isTrue: boolean) {
     if (isTrue) {
       document.getElementById("show-modal2")?.classList.add("active");
@@ -62,7 +58,7 @@ function HomePage() {
   useEffect(() => {
     showModal(isModal_Home_true);
   }, [isModal_Home_true]);
-  //console.log(isModal_Home_true, "homepage");
+  ////console.log(isModal_Home_true, "homepage");
   return (
     <>
       {!isLoading && projects ? (

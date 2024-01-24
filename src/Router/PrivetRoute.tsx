@@ -27,10 +27,10 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any | null) => {
       if (user) {
-        console.log(user)
-        const email = user.email;
-        console.log(email);
-        fetch("https://task-management-system-server-tau.vercel.app/jwt", {
+        //console.log(user)
+    
+        //console.log(email);
+        fetch("https://task-management-server-16on.onrender.com/jwt", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
         })
           .then((res) => res.json())
           .then((data: any) => {
-            //console.log(data)
+            ////console.log(data)
             localStorage.setItem("access-token", data.token);
             dispatch(setToken(data.token));
             dispatch(
@@ -64,11 +64,12 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   if (isUserLoading) {
     return (
       <div className="">
-        <Loading></Loading>
+      <Loading></Loading>
+      {/* loading................... */}
       </div>
     );
   } else {
-    ////console.log(userLoading,userEmail)
+    //////console.log(userLoading,userEmail)
 
     if (email) {
       return children;

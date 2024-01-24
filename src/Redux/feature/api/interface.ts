@@ -81,6 +81,7 @@ export interface addTaskData {
 export interface addTaskResponse{
   message: string;
   addedTask: object;
+  allTask:object;
 }
 
 export interface updateTaskData{
@@ -113,10 +114,69 @@ export interface user {
   name: string;
   mobile: string;
   role: string;
+  photoURL:string;
   __v: number;
 }
 
+export interface createConnection{
+  email1:string,
+  email2:string
+}
+
+export interface createConnectionResponse{
+  conncetionData:any;
+}
+
+
+
+interface person{
+  email:string,
+  name:string,
+photoURL:string
+}
+
+interface singleConnectionInterface{ 
+  _id:string,
+requestedBy:string,
+persons:[person],
+status:string
+}
+
+export interface getConnectionResponse{
+  getAllConnection:{allAcceptedConnection:singleConnectionInterface[],allPendingConnection:singleConnectionInterface[],
+    acceptedConnectionEmail:[string]
+  },
+  acceptedConnectionEmail:[string]
+}
+
+export interface getConnectionStatusResponse{
+  message:string,
+  updateStatus:any,
+  requestedBy:string
+}
+
+export interface getPostMessageResponse{
+  postMessage:any,
+  allMessage: [singleMsg]
+}
+
+
+export interface singleMsg{
+  _id:string,
+  connect_Id:string,
+  msgData:{email:string,message:string}
+  
+}
+
+export interface getMessageResponse{
+  allMessage: [singleMsg]
+}
 export interface allUser {
   withAdmin: user[];
   withOutAdmin: user[];
+}
+export interface allUserChat {
+  withAdmin: user[];
+  withOutAdmin: user[];
+  reqestedUser:user[]
 }

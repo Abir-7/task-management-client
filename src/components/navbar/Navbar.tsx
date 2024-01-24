@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { FaCommentAlt, FaHome } from "react-icons/fa";
 import { BiLogOutCircle } from "react-icons/bi";
 import { signOut } from "firebase/auth";
 import auth from "../../firebaseConfig/firebase";
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { change_Modal_Home_Status } from "../../Redux/feature/modalSlice/modalSlice";
 import { Tooltip } from "react-tooltip";
+import { useEffect } from "react";
+import { socket } from "../../socketio/socketio";
 
 function Navbar() {
   const {
@@ -20,7 +22,7 @@ function Navbar() {
   );
   const dispatch = useDispatch();
   const location = useLocation();
-  //console.log(location, "location");
+  ////console.log(location, "location");
   function profileOption() {
     const profileIcon = document.getElementById(
       "profile-option"
@@ -35,12 +37,21 @@ function Navbar() {
     dispatch(change_Modal_Home_Status(!isModal_Home_true));
   };
 
+  useEffect(()=>{
+    socket.connect()
+  })
+
   return (
     <div className="navbar">
       <ul className="nav-link">
         <li>
           <Link className="link" to="/">
             <FaHome />
+          </Link>
+        </li>
+        <li>
+          <Link className="link" to="/chat">
+            <FaCommentAlt />
           </Link>
         </li>
         {(location.pathname == "/" && isAdmin)&&  (
