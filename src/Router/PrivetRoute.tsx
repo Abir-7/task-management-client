@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactNode, useEffect } from "react";
 import { RootState, store } from "../Redux/store";
-import Loading from "../components/Loading/Loading";
+//import Loading from "../components/Loading/Loading";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebaseConfig/firebase";
 import {
@@ -17,7 +17,6 @@ interface PrivateRoutesProps {
 }
 
 const PrivetRouts = ({ children }: PrivateRoutesProps) => {
-
   const location = useLocation();
   const dispatch = useDispatch<typeof store.dispatch>();
   const { email, isUserLoading } = useSelector(
@@ -25,10 +24,10 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   );
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: any | null) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user) {
         //console.log(user)
-    
+
         //console.log(email);
         fetch("https://task-management-server-16on.onrender.com/jwt", {
           method: "POST",
@@ -43,16 +42,19 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
             localStorage.setItem("access-token", data.token);
             dispatch(setToken(data.token));
             dispatch(
-              setUserInfo({ name: user.displayName, email: user.email,photoURL:user.photoURL })
+              setUserInfo({
+                name: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+              })
             );
             dispatch(setUserLoading(false));
             dispatch(checkAdmin(user.email));
           });
-
       } else {
         signOut(auth);
         dispatch(setUserLoading(false));
-        dispatch(setUserInfo({ name: "", email: "",photoURL:'' }));
+        dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
         localStorage.removeItem("access-token");
       }
     });
@@ -64,8 +66,8 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   if (isUserLoading) {
     return (
       <div className="">
-      <Loading></Loading>
-      {/* loading................... */}
+        {/* <Loading></Loading> */}
+        loading...................
       </div>
     );
   } else {
@@ -75,7 +77,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
       return children;
     } else {
       signOut(auth);
-      dispatch(setUserInfo({ name: "", email: "",photoURL:'' }));
+      dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>
       );

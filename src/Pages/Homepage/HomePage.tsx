@@ -15,15 +15,9 @@ function HomePage() {
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
 
-  const { data: projects, isLoading ,refetch} = useGetAllProjectQuery("", {
-    skip: (token && email && !isUserLoading )?false:true,
-  });
+  const { data: projects,refetch} = useGetAllProjectQuery("", {skip:token?false:true});
 
-useEffect(()=>{
-if(token){
-  refetch()
-}
-},[token,email ])
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -63,9 +57,15 @@ if(token){
     showModal(isModal_Home_true);
   }, [isModal_Home_true]);
   ////console.log(isModal_Home_true, "homepage");
+
+  useEffect(()=>{
+    if(token){
+      refetch()
+    }
+    },[token,email ])
   return (
     <>
-      {!isLoading && projects ? (
+      {(isUserLoading==false && token )? (
         <div className="homepage-container-with-modal">
           <div id="show-modal2" className="show-modal">
             <ModalHomepage></ModalHomepage>
