@@ -794,9 +794,11 @@ input[type="file"]::file-selector-button:hover {
   display: none;
 }
 .sendInput {
+  margin: 0 auto;
+  width: 95%;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 .sendInput input {
   padding: 5px;
@@ -825,15 +827,17 @@ input[type="file"]::file-selector-button:hover {
   display: flex;
   flex-direction: column;
 
-  height: calc(100vh - 97px);
+  height: calc(100vh - 99px);
   overflow-y: auto !important;
   z-index: 20;
 }
-
+.messagebox::-webkit-scrollbar {
+width: 1px;
+}
 .sendButton button {
   border: none;
   background-color: transparent;
-  font-size: 25px;
+  font-size: 30px;
   padding-top: 5px;
   color: var(--main-color);
   transition: transform 0.4s;
@@ -847,6 +851,7 @@ input[type="file"]::file-selector-button:hover {
 .slide2 {
   display: none;
 }
+
 
 .text-msg-box {
   display: flex;
@@ -913,7 +918,12 @@ input[type="file"]::file-selector-button:hover {
 .send-req:active {
   transform: scale(1);
 }
-
+.msg-loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
 @media only screen and (min-width: 700px) and (max-width: 900px) {
   .chat-container {
     position: relative;
@@ -1022,11 +1032,7 @@ input[type="file"]::file-selector-button:hover {
     flex-grow: 1;
     padding: 0px 5px;
   }
-  .messagebox {
-    border: 1px solid black;
-    background-color: aqua;
-   
-  }
+
   .cbox-3 {
     flex-basis: 240px;
     height: calc(100vh - 0px);
@@ -1080,7 +1086,7 @@ input[type="file"]::file-selector-button:hover {
     width: 100%;
   }
   .messagebox {
-    height: calc(100vh - 145px);
+    height: calc(100vh - 149px);
     overflow-y: auto !important;
   }
   .cbox-2 {

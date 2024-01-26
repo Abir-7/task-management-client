@@ -21,6 +21,8 @@ interface userInfo {
   isAdmin: boolean;
   isAdminError: boolean;
   adminError: any;
+
+  isProcessing:boolean
 }
 
 const initialState: userInfo = {
@@ -37,6 +39,8 @@ const initialState: userInfo = {
   isAdmin: false,
   isAdminError: false,
   adminError: "",
+
+  isProcessing:false
 };
 
 export const userReg = createAsyncThunk(
@@ -173,6 +177,9 @@ export const userInfoSlice = createSlice({
     setToken: (state, { payload }: PayloadAction<any>) => {
       state.token = payload;
     },
+    setIsProcessing: (state, { payload }: PayloadAction<boolean>) => {
+      state.isProcessing = payload;
+    },
     setUserInfo: (
       state,
       { payload }: PayloadAction<{ email: string; name: string,photoURL:string }>
@@ -196,6 +203,7 @@ export const userInfoSlice = createSlice({
         state.isUserLoading = true;
         state.isUserInfoError = false;
         state.userInfoError = "";
+        state.isProcessing = true
       })
       .addCase(
         userReg.fulfilled,
@@ -207,6 +215,7 @@ export const userInfoSlice = createSlice({
           state.userInfoError = "";
           state.isSignupSuccessfull = true;
           state.profileImage=action.payload.profileImage
+          state.isProcessing = true
         }
       )
       .addCase(userReg.rejected, (state, action) => {
@@ -216,6 +225,7 @@ export const userInfoSlice = createSlice({
         state.isUserInfoError = true;
         state.userInfoError = action.error.message;
         state.isSignupSuccessfull = false;
+        state.isProcessing = false
       })
 
       .addCase(userLogin.pending, (state) => {
@@ -224,6 +234,7 @@ export const userInfoSlice = createSlice({
         state.isUserLoading = true;
         state.isUserInfoError = false;
         state.userInfoError = "";
+        state.isProcessing = true
       })
       .addCase(
         userLogin.fulfilled,
@@ -234,6 +245,7 @@ export const userInfoSlice = createSlice({
           state.isUserInfoError = false;
           state.userInfoError = "";
           state.isSignupSuccessfull = true;
+          state.isProcessing = true
         }
       )
       .addCase(userLogin.rejected, (state, action) => {
@@ -243,6 +255,7 @@ export const userInfoSlice = createSlice({
         state.isUserInfoError = true;
         state.userInfoError = action.error.message;
         state.isSignupSuccessfull = false;
+        state.isProcessing = false
       })
 
       .addCase(checkAdmin.pending, (state) => {
@@ -268,6 +281,6 @@ export const userInfoSlice = createSlice({
   },
 });
 
-export const { setSingupStatus, setUserInfo, setUserLoading, setToken } =
+export const { setSingupStatus, setUserInfo, setUserLoading, setToken,setIsProcessing } =
   userInfoSlice.actions;
 export default userInfoSlice.reducer;

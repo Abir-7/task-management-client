@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactNode, useEffect } from "react";
 import { RootState, store } from "../Redux/store";
-//import Loading from "../components/Loading/Loading";
+import Loading from "../components/Loading/Loading";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebaseConfig/firebase";
 import {
@@ -66,8 +66,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   if (isUserLoading) {
     return (
       <div className="">
-        {/* <Loading></Loading> */}
-        loading...................
+        <Loading></Loading>
       </div>
     );
   } else {

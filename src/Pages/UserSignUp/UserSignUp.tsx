@@ -3,16 +3,16 @@ import { FaLocationArrow } from "react-icons/fa";
 import { MdTaskAlt } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  setIsProcessing,
   setSingupStatus,
   userReg,
 } from "../../Redux/feature/userInfo/userInfoSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "../../Redux/store";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 function UserSignUp() {
-
-  const [isSignupLoading,setIsSignupLoading]=useState(false)
+  const { isProcessing,isUserLoading } = useSelector((state: RootState) => state.userInfo);
 
   const navigate = useNavigate();
   interface Inputs {
@@ -20,7 +20,7 @@ function UserSignUp() {
     email: string;
     mobile: number;
     password: string;
-    image:any
+    image: any;
   }
   const dispatch = useDispatch<typeof store.dispatch>();
 
@@ -39,37 +39,34 @@ function UserSignUp() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     //console.log(data.image[0])
-    setIsSignupLoading(true)
-    const formData = new FormData()
-        formData.append('image', data.image[0]);
+    const formData = new FormData();
+    formData.append("image", data.image[0]);
     dispatch(
       userReg({
         name: data.name,
         email: data.email,
         mobile: data.mobile,
         password: data.password,
-        formData:formData
+        formData: formData,
       })
     );
-    reset()
+    reset();
   };
 
   useEffect(() => {
     if (isSignupSuccessfull) {
-      setIsSignupLoading(false)
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Signup Successful",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      dispatch(setSingupStatus(false));
-      navigate("/");
-    }
-
-    if(isSignupSuccessfull==false){
-      setIsSignupLoading(false)
+      setTimeout(() => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Signup Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        dispatch(setIsProcessing(false));
+        dispatch(setSingupStatus(false));
+        navigate("/");
+      }, 1000);
     }
 
   }, [isSignupSuccessfull]);
@@ -113,10 +110,7 @@ function UserSignUp() {
               <br />
               <div>
                 <label htmlFor="">Profile Image</label> <br />
-                <input
-                  {...register("image", { required: true })}
-                  type="file"
-                />
+                <input {...register("image", { required: true })} type="file" />
                 {errors.image && (
                   <span className="err-msg">This field is required</span>
                 )}
@@ -133,8 +127,12 @@ function UserSignUp() {
                 )}
               </div>
             </div>
-            
-            <input  type="submit" value={isSignupLoading?'Processing...':"Submit"} />
+
+            <input
+              disabled={isProcessing}
+              type="submit"
+              value={isProcessing ? "Processing" : "Submit"}
+            />
 
             <div className="singnup-link-section">
               <div>

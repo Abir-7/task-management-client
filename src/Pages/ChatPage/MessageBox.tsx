@@ -18,7 +18,7 @@ function MessageBox({ email, connectionID, receverPerson }: Props) {
 
   const {
     data: data1,
-    refetch,
+    refetch,isFetching,
     isLoading,
   } = useGetMessageByIdQuery({ cId: connectionID }, { skip:!receverPerson });
 
@@ -87,6 +87,10 @@ const [msg,setMessage]=useState('')
           <div className="chat-head"> {receverPerson?.name}</div>{" "}
           <div className="messagebox">
             <div>
+            {isFetching?<div className="msg-loading">
+              <h4>Loading...</h4>
+            </div>:
+            <>
             {data?.allMessage?.map((msg, index) => (
               <div
                 style={
@@ -112,7 +116,8 @@ const [msg,setMessage]=useState('')
                   {msg?.msgData?.message}
                 </p>
               </div>
-            ))}
+            ))}</>
+          }
             </div>
           </div>
           <div className="send-box">

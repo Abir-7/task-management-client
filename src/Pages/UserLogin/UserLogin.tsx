@@ -4,7 +4,7 @@ import { MdTaskAlt } from "react-icons/md";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "../../Redux/store";
-import { setSingupStatus, userLogin } from "../../Redux/feature/userInfo/userInfoSlice";
+import { setIsProcessing, setSingupStatus, userLogin } from "../../Redux/feature/userInfo/userInfoSlice";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
@@ -14,6 +14,10 @@ interface Inputs {
 }
 
 function UserLogin() {
+  const {
+isProcessing
+  } = useSelector((state: RootState) => state.userInfo);
+
   const navigate=useNavigate()
   const { isSignupSuccessfull ,userInfoError} = useSelector((state: RootState) => state.userInfo);
   const dispatch = useDispatch<typeof store.dispatch>()
@@ -36,15 +40,18 @@ function UserLogin() {
 
   useEffect(()=>{
     if(isSignupSuccessfull){
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Login Successful",
-        showConfirmButton: false,
-        timer: 1500,
-      })
-      dispatch(setSingupStatus(false))
-      navigate('/')
+      setTimeout(() => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        dispatch(setIsProcessing(false))
+        dispatch(setSingupStatus(false));
+        navigate("/");
+      }, 1000); 
     }
     },[isSignupSuccessfull])
 
@@ -86,7 +93,7 @@ function UserLogin() {
                 </Link>
               </div>
             </div>
-            <input type="submit" value={'Submit'} />
+            <input disabled={isProcessing} type="submit" value={isProcessing?'Processing':'Submit'} />
             <div style={{paddingTop:'5px',color:'red',textAlign:'center'}}>
           <p>{userInfoError}</p>
           </div>
