@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useAddProjectMutation } from "../../Redux/feature/api/baseApi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { change_Modal_Home_Status } from "../../Redux/feature/modalSlice/modalSlice";
+import { change_Modal_Home_Status } from "../../Redux/feature/modal&SlideSlice/modal&Slide_Slice";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 

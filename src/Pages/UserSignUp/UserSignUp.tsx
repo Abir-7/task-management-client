@@ -12,7 +12,7 @@ import { RootState, store } from "../../Redux/store";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 function UserSignUp() {
-  const { isProcessing,isUserLoading } = useSelector((state: RootState) => state.userInfo);
+  const { isProcessing } = useSelector((state: RootState) => state.userInfo);
 
   const navigate = useNavigate();
   interface Inputs {

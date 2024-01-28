@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResponse, allUser, allUserChat, createConnection, createConnectionResponse, deleteTaskData, deleteTaskResponse, getAllTask, getConnectionResponse, getConnectionStatusResponse, getMessageResponse, getPostMessageResponse, updateProject, updateProjectResponse, updateTaskData, updateTaskResponse } from "./interface";
 export const api = createApi({
   baseQuery: fetchBaseQuery({
+   
     baseUrl: "https://task-management-server-16on.onrender.com",
     prepareHeaders: (headers) => {
       const token = `Bearer ${localStorage.getItem("access-token")}`;
@@ -11,8 +12,8 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes:['newProjects','newTask','connection','msg']
-  ,
+  refetchOnReconnect: true,
+  tagTypes:['newProjects','newTask','connection','msg'],
   endpoints: (build) => ({
     addNewUser: build.mutation({
       query: (data) => ({
@@ -72,7 +73,6 @@ export const api = createApi({
     getAllTask: build.query<getAllTask, any>({
       query: ({id}) => ({
         url: `/getAllTask/${id}`,
-
       }),
       providesTags:['newTask'],
 

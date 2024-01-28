@@ -77,9 +77,7 @@ export const userReg = createAsyncThunk(
             });
           }
           //console.log(response.data,'image')
-        const res = await fetch(
-          "https://task-management-server-16on.onrender.com/addNewUser",
-          {
+        const res = await fetch("https://task-management-server-16on.onrender.com/addNewUser",{
             method: "POST",
             headers: {
               "content-type": "application/json",

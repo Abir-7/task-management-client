@@ -8,40 +8,37 @@ import {
   useGetUserChatQuery,
   useUpdateConnectionStatusMutation,
 } from "../../Redux/feature/api/baseApi";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { FaUserCheck } from "react-icons/fa6";
 import MessageBox from "./MessageBox";
-import { RiMenuFoldFill, RiMenuUnfoldFill } from "react-icons/ri";
 import { MdFileDownloadDone } from "react-icons/md";
-function ChatPage() {
-  const [isSkip, setIsSkip] = useState(true);
-  const { email } = useSelector((state: RootState) => state.userInfo);
+import { RxCross2 } from "react-icons/rx"
 
+function ChatPage() {
+
+  const { email } = useSelector((state: RootState) => state.userInfo);
   const {
     data,
-    isLoading,
+
     refetch: userRefetch,
   } = useGetUserChatQuery(email, { skip: email ? false : true });
 
   const {
     data: getConnectionData,
-    isLoading: isGetConnectionLoading,
     refetch,
-  } = useGetConnectionQuery({ email }, { skip: isSkip });
-  console.log(getConnectionData, isGetConnectionLoading, "all connection");
-  console.log(data, isLoading);
+  } = useGetConnectionQuery({ email }, { skip: !email });
+  //console.log(getConnectionData, isGetConnectionLoading, "all connection");
+  //console.log(data, isLoading);
 
   const [
     createConnection,
     {
       data: connectionData,
-      isSuccess: isConnectSuccess,
-      isError: isConnectError,
     },
   ] = useCreateConnectionMutation();
-  console.log(isConnectError, isConnectSuccess, connectionData, "request");
-  const [ConnectionStatus, { data: statusData, isSuccess, isError }] =
+  //console.log(isConnectError, isConnectSuccess, connectionData, "request");
+  const [ConnectionStatus, { data: statusData }] =
     useUpdateConnectionStatusMutation();
 
   useEffect(() => {
@@ -51,10 +48,8 @@ function ChatPage() {
     if (connectionData) {
       socket.emit("refetchAllConnectionFromCient", "refetch");
     }
-    if (email) {
-      setIsSkip(false);
-    }
-  }, [email, connectionData, statusData]);
+
+  }, [connectionData, statusData]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -65,7 +60,7 @@ function ChatPage() {
     name: string;
   }>({ email: "", name: "" });
 
-  console.log(statusData, isSuccess, isError, "status");
+  //console.log(statusData, isSuccess, isError, "status");
   const changeConnectionStatus = (id: string) => {
     ConnectionStatus({ id: id });
   };
@@ -78,39 +73,29 @@ function ChatPage() {
     index: number;
     singleConnection: [{ email: string; name: string }];
   }) => {
-    socket.emit("join", id);
     setSelectedIndex(index + 1);
     setConnectionId(id);
     const person = singleConnection?.filter((p) => p.email !== email)[0];
-    console.log(person, "person");
-    setReceverPerson(person);
+  setReceverPerson(person);
   };
 
-  const openSlider = (number: number) => {
-    if (number == 1) {
-      const slider1 = document.getElementById("slide1") as HTMLElement;
-      // console.log('hit',slider1)
-      slider1.classList.toggle("active1");
-    }
-    if (number == 2) {
-      const slider2 = document.getElementById("slide2") as HTMLElement;
-      slider2.classList.toggle("active2");
-    }
-  };
-  const [onlineUsers, setOnlineUsers] = useState<[string]>([""]);
-  //console.log(onlineUsers,'online user')
+  interface socketusers{
+    userEmail:string,
+    socketID:string
+  }
+
+  const [onlineUsers, setOnlineUsers] = useState<socketusers[]>([]);
+  ////console.log(onlineUsers,'online user')
 
   useEffect(() => {
-    const useremail = email;
-    socket.emit("login", useremail);
-
     // Listen for online user updates
-    socket.on("updateOnlineUsers", (updatedOnlineUsers) => {
+    socket.on("updateOnlineUsers", (updatedOnlineUsers:socketusers[]) => {
+      console.log('server',updatedOnlineUsers)
       setOnlineUsers(updatedOnlineUsers);
     });
 
     socket.on("refetchAllConnectionFromServer", (data: string) => {
-      console.log(data, "dddddddddddddddataaaaaaaaaaaaaaaaa");
+      //console.log(data, "dddddddddddddddataaaaaaaaaaaaaaaaa");
 
       if (data) {
         refetch();
@@ -119,24 +104,43 @@ function ChatPage() {
 
     socket.on("pendigStatus", (soket_Email: string) => {
       /////////////////////////////////////////
-      console.log(soket_Email, "soket emailll");
+      //console.log(soket_Email, "soket emailll");
       if (soket_Email == email) {
         userRefetch();
         refetch();
       }
     });
-  }, [email, socket]);
+  }, [socket]);
 
+  const openSlider = (number: number) => {
+    const slider2 = document.getElementById("slide2") as HTMLElement;
+    const slider1 = document.getElementById("slide1") as HTMLElement;
+    if (number == 1) {
+      console.log('hit',slider1)
+      slider1.classList.add("active1");
+      slider2.classList.remove("active2")
+    }
+    if (number== 2) {
+      slider2.classList.add("active2")
+      slider1.classList.remove("active1")
+    }
+    if (number== 3) {
+      slider1.classList.remove("active1")
+      slider2.classList.remove("active2")
+    }
+
+  }
+console.log(onlineUsers,'onile users')
   return (
     <div className="chat-container">
       <div id="slide1" className="chat-box cbox-1 ">
-        <div onClick={() => openSlider(1)} className="slide2 active">
-          <RiMenuUnfoldFill />
-        </div>
+
         <div>
           <div className="chat-title">
-            <h3 style={{ textAlign: "center" }}>Pending Connection</h3>
+          <div onClick={()=>openSlider(3)} className="cross2"><RxCross2/></div>
+          <div><h3>Pending Connection</h3></div>
           </div>
+          <hr />
           <div className="pending-connection">
             {getConnectionData?.getAllConnection?.allPendingConnection.length ==
               0 && <p style={{ textAlign: "center" }}>No Pending Request</p>}
@@ -167,8 +171,8 @@ function ChatPage() {
                     <div className="chat-user-name">
                       {singleConnection?.persons
                         ?.filter((p) => p.email !== email)
-                        .map((p) => (
-                          <>{p.name}</>
+                        .map((p,index) => (
+                          <div key={index}>{p.name}</div>
                         ))}
                     </div>
                     <div className="accept-btn">
@@ -191,6 +195,7 @@ function ChatPage() {
           <div className="chat-title">
             <h3 style={{ textAlign: "center" }}>Your Connections</h3>
           </div>
+          <hr />
           <div className="allFriends">
             {getConnectionData?.getAllConnection?.allAcceptedConnection?.map(
               (singleConnection, index) => {
@@ -231,14 +236,17 @@ function ChatPage() {
                       {singleConnection?.persons
                         ?.filter((p) => p.email !== email)
                         .map((p, index) => (
-                          <div className="online-notification">
+                          <div key={index} className="online-notification">
                             <div>
                               <p key={index}>{p.name} </p>
                             </div>
                             <div className="notify">
-                              {onlineUsers.includes(p.email) && (
+                              {onlineUsers?.find(user=> {if(user.userEmail==p.email){ return user.userEmail}
+                              else {
+                                return false
+                              }})?(
                                 <FaRegDotCircle />
-                              )}
+                              ):<></>}
                             </div>
                           </div>
                         ))}
@@ -252,6 +260,7 @@ function ChatPage() {
       </div>
       <div className="chat-box cbox-2">
         <MessageBox
+        openSlider={openSlider}
           receverPerson={receverPerson}
           email={email}
           connectionID={connectionID}
@@ -259,17 +268,16 @@ function ChatPage() {
       </div>
 
       <div id="slide2" className="chat-box cbox-3 ">
-        <div onClick={() => openSlider(2)} className="slide1">
-          <RiMenuFoldFill />
-        </div>
+
 
         <div className="chat-title">
-          <h3>All Users</h3>
+          <div><h3>All Users</h3></div><div onClick={()=>openSlider(3)} className="cross"><RxCross2/></div>
         </div>
+        <hr />
         <div>
           {data?.withAdmin?.map((user, index) => {
             return (
-              <div className="user-in-chat" key={index}>
+              <div  className="user-in-chat" key={index}>
                 <div className="layer"></div>
                 <div className="chat-user-profile">
                   <img
@@ -307,7 +315,9 @@ function ChatPage() {
         </div>
         <div className="chat-title">
           <h3>Requested Users</h3>
+        
         </div>
+        <hr />
         <div>
           {data?.reqestedUser?.map((user, index) => {
             return (

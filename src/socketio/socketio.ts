@@ -1,6 +1,7 @@
-import {  io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL ='https://task-management-server-16on.onrender.com';
+const URL: string = 'https://task-management-server-16on.onrender.com';
 
 export const socket = io(URL);
+;

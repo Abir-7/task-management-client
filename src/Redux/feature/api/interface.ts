@@ -157,7 +157,7 @@ export interface getConnectionStatusResponse{
 
 export interface getPostMessageResponse{
   postMessage:any,
-  allMessage: [singleMsg]
+  message:string
 }
 
 
@@ -171,6 +171,8 @@ export interface singleMsg{
 export interface getMessageResponse{
   allMessage: [singleMsg]
 }
+
+
 export interface allUser {
   withAdmin: user[];
   withOutAdmin: user[];

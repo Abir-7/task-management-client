@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 import { useAddTaskMutation } from "../../Redux/feature/api/baseApi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { change_Modal_Task_Status } from "../../Redux/feature/modalSlice/modalSlice";
+import { change_Modal_Task_Status } from "../../Redux/feature/modal&SlideSlice/modal&Slide_Slice";
 import Swal from "sweetalert2";
 
 interface user {

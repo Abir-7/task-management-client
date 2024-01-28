@@ -6,10 +6,9 @@ import auth from "../../firebaseConfig/firebase";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { change_Modal_Home_Status } from "../../Redux/feature/modalSlice/modalSlice";
+import { change_Modal_Home_Status } from "../../Redux/feature/modal&SlideSlice/modal&Slide_Slice";
 import { Tooltip } from "react-tooltip";
-import { useEffect } from "react";
-import { socket } from "../../socketio/socketio";
+
 
 function Navbar() {
   const {
@@ -37,9 +36,7 @@ function Navbar() {
     dispatch(change_Modal_Home_Status(!isModal_Home_true));
   };
 
-  useEffect(()=>{
-    socket.connect()
-  })
+
 
   return (
     <div className="navbar">

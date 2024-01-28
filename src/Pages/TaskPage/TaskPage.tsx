@@ -12,14 +12,15 @@ import { RootState } from "../../Redux/store";
 import Modal from "./Modal";
 import { useGetAllTaskQuery } from "../../Redux/feature/api/baseApi";
 import Loading from "../../components/Loading/Loading";
-import { change_Modal_Task_Status } from "../../Redux/feature/modalSlice/modalSlice";
+import { change_Modal_Task_Status } from "../../Redux/feature/modal&SlideSlice/modal&Slide_Slice";
 import { useParams } from "react-router-dom";
 import img from "../../assets/default.jpg";
+import { socket } from "../../socketio/socketio";
 type AssignedPerson = {
   _id: string;
   email: string;
   name: string;
-  photoURL:string
+  photoURL: string;
 };
 
 interface Task {
@@ -68,7 +69,11 @@ function TaskPage() {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const { data: allTask, isLoading } = useGetAllTaskQuery<getAllTask>({ id },{pollingInterval:30000});
+  const {
+    data: allTask,
+    isLoading,
+    refetch,
+  } = useGetAllTaskQuery<getAllTask>({ id }, { pollingInterval: 1800000 });
   console.log(allTask, "all task");
 
   const filteredTask = searchValue == "" ? allTask?.getAllTask : filterTask();
@@ -97,6 +102,16 @@ function TaskPage() {
   useEffect(() => {
     filterTask();
   }, [searchValue]);
+
+  useEffect(() => {
+    socket.on("newTask", (data) => {
+      if (data) {
+        console.log('hit from server')
+        refetch();
+      }
+    });
+  }, [socket]);
+
   function showSidebar() {
     document.getElementById("my-task-section")?.classList.toggle("active");
   }
@@ -109,7 +124,7 @@ function TaskPage() {
     if (isTrue) {
       document.getElementById("show-modal")?.classList.add("active");
     } else {
-      document.getElementById("show-modal")?.classList.remove("active"); 
+      document.getElementById("show-modal")?.classList.remove("active");
     }
   }
 
@@ -263,7 +278,7 @@ function TaskPage() {
                         data-tooltip-content={person?.name}
                         className="member-slide"
                         key={index}
-                        src={person.photoURL?person.photoURL:img} //to do add real image
+                        src={person.photoURL ? person.photoURL : img} //to do add real image
                         alt=""
                       />
                       <Tooltip

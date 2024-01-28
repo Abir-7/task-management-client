@@ -12,6 +12,7 @@ import {
   setUserInfo,
   setUserLoading,
 } from "../Redux/feature/userInfo/userInfoSlice";
+import { socket } from "../socketio/socketio";
 interface PrivateRoutesProps {
   children: ReactNode;
 }
@@ -22,6 +23,12 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   const { email, isUserLoading } = useSelector(
     (state: RootState) => state.userInfo
   );
+
+  useEffect(() => {
+    if (email) {
+      socket.emit("login", email);
+    }
+  }, [email,socket]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
@@ -75,6 +82,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     if (email) {
       return children;
     } else {
+      socket.disconnect();
       signOut(auth);
       dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
       return (
