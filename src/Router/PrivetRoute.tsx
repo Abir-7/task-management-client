@@ -24,11 +24,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     (state: RootState) => state.userInfo
   );
 
-  useEffect(() => {
-    if (email) {
-      socket.emit("login", email);
-    }
-  }, [email,socket]);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
@@ -69,6 +65,13 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (email) {
+      socket.connect()
+      socket.emit("login", email);
+    }
+  }, [email,socket]);
 
   if (isUserLoading) {
     return (
