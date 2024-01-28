@@ -40,12 +40,6 @@ function MessageBox({ email, connectionID, receverPerson, openSlider }: Props) {
     }
   }, [isLoading,connectionID]);
 
-  useEffect(()=>{
-    if (postMsgData) {
-      console.log('hit',postMsgData.postMessage)
-      socket.emit("message", postMsgData.postMessage);
-    }
-  },[postMsgData])
 
   useEffect(() => {
     if (socket) {
@@ -56,11 +50,17 @@ function MessageBox({ email, connectionID, receverPerson, openSlider }: Props) {
             console.log(message,'message from server')
             setAllMessage((p: any) => [...p, message]);
           }
-     
         }
       });
     }
   }, [socket,connectionID]);
+
+  useEffect(()=>{
+    if (postMsgData) {
+      console.log('hit',postMsgData.postMessage)
+      socket.emit("message", postMsgData.postMessage);
+    }
+  },[postMsgData])
 
   //console.log(allMessage?.length);
 

@@ -24,14 +24,9 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     (state: RootState) => state.userInfo
   );
 
-
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user) {
-        //console.log(user)
-
-        //console.log(email);
         fetch("https://task-management-server-16on.onrender.com/jwt", {
           method: "POST",
           headers: {
@@ -43,7 +38,6 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
           .then((data: any) => {
             ////console.log(data)
             localStorage.setItem("access-token", data.token);
-            dispatch(setToken(data.token));
             dispatch(
               setUserInfo({
                 name: user.displayName,
@@ -53,9 +47,11 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
             );
             dispatch(setUserLoading(false));
             dispatch(checkAdmin(user.email));
+            dispatch(setToken(data.token));
           });
       } else {
         signOut(auth);
+        dispatch(setToken(''))
         dispatch(setUserLoading(false));
         dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
         localStorage.removeItem("access-token");
@@ -68,10 +64,10 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
 
   useEffect(() => {
     if (email) {
-      socket.connect()
+      socket.connect();
       socket.emit("login", email);
     }
-  }, [email,socket]);
+  }, [email, socket]);
 
   if (isUserLoading) {
     return (
@@ -80,14 +76,12 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
       </div>
     );
   } else {
-    //////console.log(userLoading,userEmail)
-
     if (email) {
       return children;
     } else {
+      dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
       socket.disconnect();
       signOut(auth);
-      dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>
       );

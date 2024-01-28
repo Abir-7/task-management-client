@@ -11,11 +11,11 @@ import Swal from "sweetalert2";
 import Loading from "../../components/Loading/Loading";
 
 function HomePage() {
-  const { isAdmin, token,email,isUserLoading } = useSelector((state: RootState) => state.userInfo);
+  const { isAdmin,token,isUserLoading } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
 
-  const { data: projects,refetch} = useGetAllProjectQuery("", {skip:token?false:true});
+  const { data: projects} = useGetAllProjectQuery("", {skip:token?false:true});
 
 
 
@@ -58,11 +58,6 @@ function HomePage() {
   }, [isModal_Home_true]);
   ////console.log(isModal_Home_true, "homepage");
 
-  useEffect(()=>{
-    if(token){
-      refetch()
-    }
-    },[token,email ])
   return (
     <>
       {(isUserLoading==false && token )? (
