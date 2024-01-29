@@ -5,6 +5,7 @@ import {
 } from "../../Redux/feature/api/baseApi";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+import { socket } from "../../socketio/socketio";
 
 interface Task {
   assign: {
@@ -37,11 +38,10 @@ function TaskDescription({
   const [deleteTask, { isSuccess: isDeleteSuccess, isError: isDeleteError }] =  
     useDeletedTaskMutation();
 
-  console.log( "updated  data");
-
   useEffect(() => {
 
     if(isDeleteSuccess){
+      socket.emit('taskDeleted','delete')
       Swal.fire({
         position: "center",
         icon: "success",

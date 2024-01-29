@@ -928,7 +928,7 @@ input[type="file"]::file-selector-button:hover {
 .chat-title {
   margin-bottom: 5px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: 30px;
   box-sizing: border-box;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { socket } from "../../socketio/socketio";
+
 import { IoPersonAddOutline } from "react-icons/io5";
 import { FaRegDotCircle } from "react-icons/fa";
 import {
@@ -8,59 +8,82 @@ import {
   useGetUserChatQuery,
   useUpdateConnectionStatusMutation,
 } from "../../Redux/feature/api/baseApi";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { FaUserCheck } from "react-icons/fa6";
 import MessageBox from "./MessageBox";
 import { MdFileDownloadDone } from "react-icons/md";
-import { RxCross2 } from "react-icons/rx"
+import { RxCross2 } from "react-icons/rx";
+import { socket } from "../../socketio/socketio";
 
 function ChatPage() {
-
-  const { email } = useSelector((state: RootState) => state.userInfo);
-  const {
-    data,
-
-    refetch: userRefetch,
-  } = useGetUserChatQuery(email, { skip: email ? false : true });
-
-  const {
-    data: getConnectionData,
-    refetch,
-  } = useGetConnectionQuery({ email }, { skip: !email });
-  //console.log(getConnectionData, isGetConnectionLoading, "all connection");
-  //console.log(data, isLoading);
-
-  const [
-    createConnection,
-    {
-      data: connectionData,
-    },
-  ] = useCreateConnectionMutation();
-  //console.log(isConnectError, isConnectSuccess, connectionData, "request");
-  const [ConnectionStatus, { data: statusData }] =
-    useUpdateConnectionStatusMutation();
-
-  useEffect(() => {
-    if (statusData) {
-      socket.emit("refetchPendingFromCient", statusData.requestedBy);
-    }
-    if (connectionData) {
-      socket.emit("refetchAllConnectionFromCient", "refetch");
-    }
-
-  }, [connectionData, statusData]);
+  const [connectionID, setConnectionId] = useState("");
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-
-  const [connectionID, setConnectionId] = useState("");
   const [receverPerson, setReceverPerson] = useState<{
     email: string;
     name: string;
   }>({ email: "", name: "" });
 
-  //console.log(statusData, isSuccess, isError, "status");
+  const [receverSocketID, setReceverSocketID] = useState<{
+    email: string;
+    socketID: string;
+  }>({ email: "", socketID: "" });
+
+  const [senderSocketID, setSenderSocketID] = useState<{
+    email: string;
+    socketID: string;
+  }>({ email: "", socketID: "" });
+
+  const { email, allOnlineUser } = useSelector(
+    (state: RootState) => state.userInfo
+  );
+
+  const [createConnection, { data: connectionReqData }] =
+    useCreateConnectionMutation();
+
+  const [ConnectionStatus,{
+    data:pendingConnectionStatus
+  }] = useUpdateConnectionStatusMutation();
+
+  const { data } = useGetUserChatQuery(email, { skip: email ? false : true });
+  const { data: getConnectionData, refetch: refetchConnectionData } =
+    useGetConnectionQuery({ email }, { skip: !email });
+
+console.log(pendingConnectionStatus,'pending status')
+useEffect(()=>{
+if(pendingConnectionStatus){
+if(pendingConnectionStatus.requestedBy){
+  socket.emit('connectionStatus',{msg:'reqAcpt',email:pendingConnectionStatus.requestedBy})
+}
+}},[pendingConnectionStatus])
+
+  useEffect(() => {
+    if (connectionReqData) {
+      const reciver = connectionReqData.conncetionData.persons.filter(
+        (p: { email: string; name: string }) =>
+          p.email !== connectionReqData.conncetionData.requestedBy
+      )[0];
+
+      socket.emit("pendingReq", { msg: "newReq", reciver: reciver });
+    }
+  }, [connectionReqData?.conncetionData]);
+
+  useEffect(() => {
+    socket.on("pendingReqs", (data) => {
+      if (data=='newReq') {
+        refetchConnectionData();
+      }
+    });
+    socket.on("connection_Status", (data) => {
+      if (data=='reqAcpt') {
+        refetchConnectionData();
+      }
+    });
+    
+  }, [socket]);
+
   const changeConnectionStatus = (id: string) => {
     ConnectionStatus({ id: id });
   };
@@ -68,77 +91,60 @@ function ChatPage() {
     id,
     index,
     singleConnection,
+    allOnlineUser,
+    senderEmail,
   }: {
     id: string;
     index: number;
     singleConnection: [{ email: string; name: string }];
+    allOnlineUser: { email: string; socketID: string }[];
+    senderEmail: string;
   }) => {
     setSelectedIndex(index + 1);
     setConnectionId(id);
+
     const person = singleConnection?.filter((p) => p.email !== email)[0];
-  setReceverPerson(person);
+
+    const receverId = allOnlineUser.find((user) => user.email == person.email);
+    if (receverId) {
+      setReceverSocketID(receverId);
+    }
+    const senderId = allOnlineUser.find((user) => user.email == senderEmail);
+    if (senderId) {
+      setSenderSocketID(senderId);
+    }
+    setReceverPerson(person);
   };
-
-  interface socketusers{
-    userEmail:string,
-    socketID:string
-  }
-
-  const [onlineUsers, setOnlineUsers] = useState<socketusers[]>([]);
-  ////console.log(onlineUsers,'online user')
-
-  useEffect(() => {
-    // Listen for online user updates
-    socket.on("updateOnlineUsers", (updatedOnlineUsers:socketusers[]) => {
-      console.log('server',updatedOnlineUsers)
-      setOnlineUsers(updatedOnlineUsers);
-    });
-
-    socket.on("refetchAllConnectionFromServer", (data: string) => {
-      //console.log(data, "dddddddddddddddataaaaaaaaaaaaaaaaa");
-
-      if (data) {
-        refetch();
-      }
-    });
-
-    socket.on("pendigStatus", (soket_Email: string) => {
-      /////////////////////////////////////////
-      //console.log(soket_Email, "soket emailll");
-      if (soket_Email == email) {
-        userRefetch();
-        refetch();
-      }
-    });
-  }, [socket]);
 
   const openSlider = (number: number) => {
     const slider2 = document.getElementById("slide2") as HTMLElement;
     const slider1 = document.getElementById("slide1") as HTMLElement;
     if (number == 1) {
-      console.log('hit',slider1)
+      console.log("hit", slider1);
       slider1.classList.add("active1");
-      slider2.classList.remove("active2")
+      slider2.classList.remove("active2");
     }
-    if (number== 2) {
-      slider2.classList.add("active2")
-      slider1.classList.remove("active1")
+    if (number == 2) {
+      slider2.classList.add("active2");
+      slider1.classList.remove("active1");
     }
-    if (number== 3) {
-      slider1.classList.remove("active1")
-      slider2.classList.remove("active2")
+    if (number == 3) {
+      slider1.classList.remove("active1");
+      slider2.classList.remove("active2");
     }
+  };
 
-  }
-console.log(onlineUsers,'onile users')
   return (
     <div className="chat-container">
       <div id="slide1" className="chat-box cbox-1 ">
-
         <div>
           <div className="chat-title">
-          <div onClick={()=>openSlider(3)} className="cross2"><RxCross2/></div>
-          <div><h3>Pending Connection</h3></div>
+            <div onClick={() => openSlider(3)} className="cross2">
+              <RxCross2 />
+            </div>
+            <div style={{ width: "100%" }}>
+              <h3 style={{ textAlign: "center" }}>Pending Connection</h3>
+            </div>
           </div>
           <hr />
           <div className="pending-connection">
@@ -147,11 +153,7 @@ console.log(onlineUsers,'onile users')
             {getConnectionData?.getAllConnection?.allPendingConnection?.map(
               (singleConnection, index) => {
                 return (
-                  <div
-          
-                    className="user-in-chat"
-                    key={index + 1}
-                  >
+                  <div className="user-in-chat" key={index + 1}>
                     <div className="layer"></div>
                     <div className="chat-user-profile">
                       {singleConnection?.persons
@@ -171,7 +173,7 @@ console.log(onlineUsers,'onile users')
                     <div className="chat-user-name">
                       {singleConnection?.persons
                         ?.filter((p) => p.email !== email)
-                        .map((p,index) => (
+                        .map((p, index) => (
                           <div key={index}>{p.name}</div>
                         ))}
                     </div>
@@ -192,7 +194,7 @@ console.log(onlineUsers,'onile users')
           </div>
         </div>
         <div>
-          <div className="chat-title">
+          <div style={{ width: "100%" }} className="chat-title">
             <h3 style={{ textAlign: "center" }}>Your Connections</h3>
           </div>
           <hr />
@@ -206,6 +208,8 @@ console.log(onlineUsers,'onile users')
                         id: singleConnection._id,
                         index: index,
                         singleConnection: singleConnection.persons,
+                        allOnlineUser,
+                        senderEmail: email,
                       })
                     }
                     style={
@@ -241,12 +245,17 @@ console.log(onlineUsers,'onile users')
                               <p key={index}>{p.name} </p>
                             </div>
                             <div className="notify">
-                              {onlineUsers?.find(user=> {if(user.userEmail==p.email){ return user.userEmail}
-                              else {
-                                return false
-                              }})?(
+                              {allOnlineUser?.find((user) => {
+                                if (user.email == p.email) {
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              }) ? (
                                 <FaRegDotCircle />
-                              ):<></>}
+                              ) : (
+                                <></>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -260,7 +269,9 @@ console.log(onlineUsers,'onile users')
       </div>
       <div className="chat-box cbox-2">
         <MessageBox
-        openSlider={openSlider}
+          senderSocketID={senderSocketID}
+          receverSocketID={receverSocketID}
+          openSlider={openSlider}
           receverPerson={receverPerson}
           email={email}
           connectionID={connectionID}
@@ -268,16 +279,19 @@ console.log(onlineUsers,'onile users')
       </div>
 
       <div id="slide2" className="chat-box cbox-3 ">
-
-
         <div className="chat-title">
-          <div><h3>All Users</h3></div><div onClick={()=>openSlider(3)} className="cross"><RxCross2/></div>
+          <div>
+            <h3>All Users</h3>
+          </div>
+          <div onClick={() => openSlider(3)} className="cross">
+            <RxCross2 />
+          </div>
         </div>
         <hr />
         <div>
           {data?.withAdmin?.map((user, index) => {
             return (
-              <div  className="user-in-chat" key={index}>
+              <div className="user-in-chat" key={index}>
                 <div className="layer"></div>
                 <div className="chat-user-profile">
                   <img
@@ -315,7 +329,6 @@ console.log(onlineUsers,'onile users')
         </div>
         <div className="chat-title">
           <h3>Requested Users</h3>
-        
         </div>
         <hr />
         <div>

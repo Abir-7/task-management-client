@@ -16,6 +16,7 @@ import { change_Modal_Task_Status } from "../../Redux/feature/modal&SlideSlice/m
 import { useParams } from "react-router-dom";
 import img from "../../assets/default.jpg";
 import { socket } from "../../socketio/socketio";
+
 type AssignedPerson = {
   _id: string;
   email: string;
@@ -44,40 +45,27 @@ interface getAllTask {
   error: string;
 }
 function TaskPage() {
-  const {
-    userName,
-    email,
-    isSignupSuccessfull,
-    isAdmin,
-    adminError,
-    userInfoError,
-  } = useSelector((state: RootState) => state.userInfo);
   const { id } = useParams<{ id: string }>();
-  console.log(
-    id,
-    "id",
-    userName,
-    isSignupSuccessfull,
-    adminError,
-    userInfoError
-  );
+
   const dispatch = useDispatch();
+
+  const [searchValue, setSearchValue] = useState("");
+
+  const { email, isAdmin } = useSelector((state: RootState) => state.userInfo);
 
   const { isModal_Task_true } = useSelector(
     (state: RootState) => state.modalStatus
   );
-
-  const [searchValue, setSearchValue] = useState("");
 
   const {
     data: allTask,
     isLoading,
     refetch,
   } = useGetAllTaskQuery<getAllTask>({ id }, { pollingInterval: 1800000 });
-  console.log(allTask, "all task");
+  //console.log(allTask, "all task");
 
   const filteredTask = searchValue == "" ? allTask?.getAllTask : filterTask();
-  console.log(filteredTask, "all task 2");
+
 
   function filterTask(): TaskLists {
     const pendingTask = allTask?.pendingTask.filter((task: any) =>
@@ -89,28 +77,31 @@ function TaskPage() {
     const completedTask = allTask?.completedTask.filter((task: any) =>
       task.taskName.toLowerCase().includes(searchValue.toLowerCase())
     );
-
-    console.log(pendingTask, "1");
-    console.log(onGoingTask, "2");
-    console.log(completedTask, "3");
     return {
       pendingTask: pendingTask,
       onGoingTask: onGoingTask,
       completedTask: completedTask,
     };
   }
+
+  useEffect(()=>{
+    socket.on('newTaskAdded',data=>{
+      if(data=='newtask'){
+        refetch()
+      }
+    })
+
+    socket.on('deletedTask',data=>{
+      if(data=='delete'){
+        refetch()
+      }
+    })
+
+  },[socket])
+
   useEffect(() => {
     filterTask();
   }, [searchValue]);
-
-  useEffect(() => {
-    socket.on("newTask", (data) => {
-      if (data) {
-        console.log('hit from server')
-        refetch();
-      }
-    });
-  }, [socket]);
 
   function showSidebar() {
     document.getElementById("my-task-section")?.classList.toggle("active");

@@ -10,6 +10,7 @@ import { change_Modal_Home_Status } from "../../Redux/feature/modal&SlideSlice/m
 import { Tooltip } from "react-tooltip";
 
 
+
 function Navbar() {
   const {
     userName,
@@ -21,7 +22,7 @@ function Navbar() {
   );
   const dispatch = useDispatch();
   const location = useLocation();
-  ////console.log(location, "location");
+  
   function profileOption() {
     const profileIcon = document.getElementById(
       "profile-option"

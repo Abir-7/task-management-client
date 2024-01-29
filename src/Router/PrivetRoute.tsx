@@ -8,6 +8,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebaseConfig/firebase";
 import {
   checkAdmin,
+  setOnlineUser,
   setToken,
   setUserInfo,
   setUserLoading,
@@ -23,6 +24,14 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   const { email, isUserLoading } = useSelector(
     (state: RootState) => state.userInfo
   );
+
+  useEffect(()=>{
+    socket.emit('users',email)
+    socket.on('connectedUsers',(data:{email:string,socketID:string}[])=>{
+      //console.log(data)
+      dispatch(setOnlineUser(data))
+    })
+},[socket,email])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
@@ -62,12 +71,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (email) {
-      socket.connect();
-      socket.emit("login", email);
-    }
-  }, [email, socket]);
+
 
   if (isUserLoading) {
     return (
@@ -75,12 +79,12 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
         <Loading></Loading>
       </div>
     );
+    
   } else {
     if (email) {
       return children;
     } else {
       dispatch(setUserInfo({ name: "", email: "", photoURL: "" }));
-      socket.disconnect();
       signOut(auth);
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>

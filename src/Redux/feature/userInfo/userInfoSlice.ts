@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import auth from "../../../firebaseConfig/firebase";
 import axios from "axios";
+interface onlineuser{email:string,socketID:string}
 interface userInfo {
   userName: string;
   email: string;
@@ -23,6 +24,7 @@ interface userInfo {
   adminError: any;
 
   isProcessing:boolean
+  allOnlineUser:onlineuser[]
 }
 
 const initialState: userInfo = {
@@ -40,7 +42,9 @@ const initialState: userInfo = {
   isAdminError: false,
   adminError: "",
 
-  isProcessing:false
+  isProcessing:false,
+
+  allOnlineUser:[]
 };
 
 export const userReg = createAsyncThunk(
@@ -172,6 +176,9 @@ export const userInfoSlice = createSlice({
   name: "userInfo",
   initialState,
   reducers: {
+    setOnlineUser: (state, { payload }: PayloadAction<onlineuser[]>) => {
+      state.allOnlineUser =payload;
+    },
     setToken: (state, { payload }: PayloadAction<any>) => {
       state.token = payload;
     },
@@ -279,6 +286,6 @@ export const userInfoSlice = createSlice({
   },
 });
 
-export const { setSingupStatus, setUserInfo, setUserLoading, setToken,setIsProcessing } =
+export const {setOnlineUser, setSingupStatus, setUserInfo, setUserLoading, setToken,setIsProcessing } =
   userInfoSlice.actions;
 export default userInfoSlice.reducer;

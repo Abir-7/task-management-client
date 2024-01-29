@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { change_Modal_Task_Status } from "../../Redux/feature/modal&SlideSlice/modal&Slide_Slice";
 import Swal from "sweetalert2";
+import { socket } from "../../socketio/socketio";
 
 interface user {
   _id: string;
@@ -29,10 +30,25 @@ interface Inputs {
 
 function Modal({ isModal_Task_true, user,id }: showModal) {
   const dispatch = useDispatch();
+
   const [addTasks, { isSuccess:isAddSuccess,isError:isAddError }] = useAddTaskMutation();
+
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+
+
+
+
+
 
   useEffect(()=>{
     if(isAddSuccess){
+      socket.emit('taskAdded','newtask')
       Swal.fire({
         position: "center",
         icon: "success",
@@ -51,13 +67,6 @@ function Modal({ isModal_Task_true, user,id }: showModal) {
       })
     }
   },[isAddSuccess,isAddError])
-
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
     //console.log(data, "gg");

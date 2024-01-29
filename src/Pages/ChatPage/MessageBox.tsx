@@ -4,67 +4,57 @@ import {
   usePostMessageMutation,
 } from "../../Redux/feature/api/baseApi";
 import { useEffect, useRef, useState } from "react";
-import { socket } from "../../socketio/socketio";
-import { singleMsg } from "../../Redux/feature/api/interface";
 
 import { FaUsers } from "react-icons/fa6";
 import { TbUserHexagon } from "react-icons/tb";
+import { socket } from "../../socketio/socketio";
+
 interface Props {
   email: string;
   connectionID: string;
   receverPerson: { email: string; name: string };
   openSlider: (number: number) => void;
+  receverSocketID:{email:string,socketID:string};
+  senderSocketID:{email:string,socketID:string};
+
 }
-function MessageBox({ email, connectionID, receverPerson, openSlider }: Props) {
-  const { data, isLoading, 
-    //isFetching, refetch 
-  } = useGetMessageByIdQuery(
+function MessageBox({ email, connectionID, receverPerson, openSlider,receverSocketID,senderSocketID }: Props) {
+
+  const msgRef = useRef<any>();
+
+  const [msg, setMessage] = useState("");
+
+
+  const {data,isLoading} = useGetMessageByIdQuery(
     { cId: connectionID },
     { skip: !connectionID, refetchOnMountOrArgChange: true }
   );
-    console.log(connectionID)
-  const [allMessage, setAllMessage] = useState<singleMsg[]>([
-    { _id: "", connect_Id: "", msgData: { email: "", message: "" } },
-  ]);
 
-  const [ 
-    sendMsg,
-    { data: postMsgData },
-  ] = usePostMessageMutation();
+  const [allMessage,setAllMessage]=useState( [{_id:'',connect_Id:'',msgData:{email:'',message:''}}])
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (data) {
-        setAllMessage(data?.allMessage);
-      }
-    }
-  }, [isLoading,connectionID]);
-
-
-  useEffect(() => {
-    if (socket) {
-      socket.on("message2", (message: { connect_Id: string; msgData:{email:string,message:string},_id:string,__v:number }) => {
-        console.log(message.connect_Id,'m from server',connectionID,'gg')
-        if (message.connect_Id == connectionID) {
-          if (message.msgData) {
-            console.log(message,'message from server')
-            setAllMessage((p: any) => [...p, message]);
-          }
-        }
-      });
-    }
-  }, [socket,connectionID]);
+  const [sendMsg] = usePostMessageMutation();
 
   useEffect(()=>{
-    if (postMsgData) {
-      console.log('hit',postMsgData.postMessage)
-      socket.emit("message", postMsgData.postMessage);
-    }
-  },[postMsgData])
+  if(!isLoading ){
+if(data){
+  setAllMessage(data?.allMessage)
+}
+  }
+  },[isLoading])
 
-  //console.log(allMessage?.length);
+  useEffect(() => {
+    msgRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [allMessage?.length]);
 
-  const [msg, setMessage] = useState("");
+  useEffect(()=>{
+    socket.on('reciver',(data:{connectionID:string,msgData:{email:string,message:string}})=>{
+     // console.log(data,'server')
+if(data){
+  setAllMessage((p)=>[...p,{_id:'',connect_Id:data.connectionID,msgData:{email:data.msgData.email,message:data.msgData.message}}])
+}
+    })
+  },[socket])
+
   const sendMessage = (): void => {
     if (msg !== "") {
       sendMsg({
@@ -72,14 +62,9 @@ function MessageBox({ email, connectionID, receverPerson, openSlider }: Props) {
         msgData: { email: email, message: msg },
       });
     }
-    setMessage("");
+    socket.emit('msgFromSender',{msgData: { email: email, message: msg },connectionID:connectionID,receverSocketID,senderSocketID})
+    setMessage("",);
   };
-
-  const msgRef = useRef<any>();
-
-  useEffect(() => {
-    msgRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [allMessage?.length]);
 
   return (
     <>
@@ -96,7 +81,7 @@ function MessageBox({ email, connectionID, receverPerson, openSlider }: Props) {
             </div>{" "}
           </div>{" "}
           <div className="messagebox">
-            {allMessage.length == 1 && allMessage[0]._id == "" ? (
+            {allMessage?.length == 1 && allMessage[0]?._id == "" ? (
               <h2>Start Message with {receverPerson?.name}</h2>
             ) : (
               <div>

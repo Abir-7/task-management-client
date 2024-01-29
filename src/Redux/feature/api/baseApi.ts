@@ -68,7 +68,7 @@ export const api = createApi({
         method: "DELETE",
         body: data,
       }),
-      invalidatesTags:['newTask']
+      //invalidatesTags:['newTask']
     }),
     getAllTask: build.query<getAllTask, any>({
       query: ({id}) => ({

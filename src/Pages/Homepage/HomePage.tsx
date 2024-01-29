@@ -11,13 +11,13 @@ import Swal from "sweetalert2";
 import Loading from "../../components/Loading/Loading";
 
 function HomePage() {
-  const { isAdmin,token,isUserLoading } = useSelector((state: RootState) => state.userInfo);
+  const { isAdmin,token,isUserLoading,allOnlineUser } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
 
   const { data: projects} = useGetAllProjectQuery("", {skip:token?false:true});
 
-
+  console.log(allOnlineUser)
 
   useEffect(() => {
     if (isSuccess) {
