@@ -15,8 +15,10 @@ import MessageBox from "./MessageBox";
 import { MdFileDownloadDone } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { socket } from "../../socketio/socketio";
+import ChatUserLoader from "../../components/Loading/ChatUserLoader";
 
 function ChatPage() {
+
   const [connectionID, setConnectionId] = useState("");
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -47,11 +49,11 @@ function ChatPage() {
     data:pendingConnectionStatus
   }] = useUpdateConnectionStatusMutation();
 
-  const { data } = useGetUserChatQuery(email, { skip: email ? false : true });
-  const { data: getConnectionData, refetch: refetchConnectionData } =
+  const { data,isLoading:isUsersLoading } = useGetUserChatQuery(email, { skip: email ? false : true });
+  const { data: getConnectionData,isLoading:isGetConnectionLoading, refetch: refetchConnectionData } =
     useGetConnectionQuery({ email }, { skip: !email });
 
-console.log(pendingConnectionStatus,'pending status')
+//console.log(pendingConnectionStatus,'pending status')
 useEffect(()=>{
 if(pendingConnectionStatus){
 if(pendingConnectionStatus.requestedBy){
@@ -150,7 +152,12 @@ if(pendingConnectionStatus.requestedBy){
           <div className="pending-connection">
             {getConnectionData?.getAllConnection?.allPendingConnection.length ==
               0 && <p style={{ textAlign: "center" }}>No Pending Request</p>}
-            {getConnectionData?.getAllConnection?.allPendingConnection?.map(
+                    {
+                allOnlineUser.length==0? <p style={{ textAlign: "center",marginTop:'10px',marginBottom:'10px',color:'red' }}>Socket io is try to connect..server is uploaded in free hoising site....if connect this message will hide.. <br /> users: {allOnlineUser.length} </p>:<></>
+              }
+    {
+      !isGetConnectionLoading? <>
+              {getConnectionData?.getAllConnection?.allPendingConnection?.map(
               (singleConnection, index) => {
                 return (
                   <div className="user-in-chat" key={index + 1}>
@@ -191,6 +198,10 @@ if(pendingConnectionStatus.requestedBy){
                 );
               }
             )}
+      </>:<>
+      <ChatUserLoader></ChatUserLoader>
+      </>
+    }
           </div>
         </div>
         <div>
@@ -199,6 +210,7 @@ if(pendingConnectionStatus.requestedBy){
           </div>
           <hr />
           <div className="allFriends">
+          {!isGetConnectionLoading ? <>
             {getConnectionData?.getAllConnection?.allAcceptedConnection?.map(
               (singleConnection, index) => {
                 return (
@@ -264,6 +276,8 @@ if(pendingConnectionStatus.requestedBy){
                 );
               }
             )}
+          </>:
+          <ChatUserLoader></ChatUserLoader>}
           </div>
         </div>
       </div>
@@ -289,50 +303,53 @@ if(pendingConnectionStatus.requestedBy){
         </div>
         <hr />
         <div>
-          {data?.withAdmin?.map((user, index) => {
-            return (
-              <div className="user-in-chat" key={index}>
-                <div className="layer"></div>
-                <div className="chat-user-profile">
-                  <img
-                    src={
-                      user?.photoURL
-                        ? user?.photoURL
-                        : "https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=1380&t=st=1704644431~exp=1704645031~hmac=7652214cef9b38ab9cf939c9bdbc9ab6951115f4d86a2cfb5211fc2b3e8243b2"
-                    }
-                    alt=""
-                  />
-                </div>
-                <div className="chat-user-name">
-                  {user.email == email ? "You" : user?.name}{" "}
-                  {user.role == "admin" && <>({user.role})</>}
-                </div>
-                {user.email !== email &&
-                  getConnectionData?.getAllConnection?.acceptedConnectionEmail.includes(
-                    user.email
-                  ) !== true && (
-                    <div
-                      onClick={() =>
-                        createConnection({
-                          email1: email,
-                          email2: user.email,
-                        })
-                      }
-                      className="send-req"
-                    >
-                      <IoPersonAddOutline />
-                    </div>
-                  )}
+       {
+        !isUsersLoading ? <>   {data?.withAdmin?.map((user, index) => {
+          return (
+            <div className="user-in-chat" key={index}>
+              <div className="layer"></div>
+              <div className="chat-user-profile">
+                <img
+                  src={
+                    user?.photoURL
+                      ? user?.photoURL
+                      : "https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=1380&t=st=1704644431~exp=1704645031~hmac=7652214cef9b38ab9cf939c9bdbc9ab6951115f4d86a2cfb5211fc2b3e8243b2"
+                  }
+                  alt=""
+                />
               </div>
-            );
-          })}
+              <div className="chat-user-name">
+                {user.email == email ? "You" : user?.name}{" "}
+                {user.role == "admin" && <>({user.role})</>}
+              </div>
+              {user.email !== email &&
+                getConnectionData?.getAllConnection?.acceptedConnectionEmail.includes(
+                  user.email
+                ) !== true && (
+                  <div
+                    onClick={() =>
+                      createConnection({
+                        email1: email,
+                        email2: user.email,
+                      })
+                    }
+                    className="send-req"
+                  >
+                    <IoPersonAddOutline />
+                  </div>
+                )}
+            </div>
+          );
+        })}</>:<><ChatUserLoader></ChatUserLoader></>
+       }
         </div>
         <div className="chat-title">
           <h3>Requested Users</h3>
         </div>
         <hr />
         <div>
-          {data?.reqestedUser?.map((user, index) => {
+        {
+          !isUsersLoading ? <>  {data?.reqestedUser?.map((user, index) => {
             return (
               <div className="user-in-chat" key={index}>
                 <div className="layer"></div>
@@ -354,7 +371,8 @@ if(pendingConnectionStatus.requestedBy){
                 </div>
               </div>
             );
-          })}
+          })}</>:<><ChatUserLoader></ChatUserLoader></>
+        }
         </div>
       </div>
     </div>

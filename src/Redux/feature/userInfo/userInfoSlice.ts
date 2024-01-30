@@ -81,7 +81,7 @@ export const userReg = createAsyncThunk(
             });
           }
           //console.log(response.data,'image')
-        const res = await fetch("https://task-management-server-16on.onrender.com/addNewUser",{
+        const res = await fetch("https://task-management-system-server-tau.vercel.app/addNewUser",{
             method: "POST",
             headers: {
               "content-type": "application/json",
@@ -129,7 +129,7 @@ export const checkAdmin = createAsyncThunk(
     const token = localStorage.getItem("access-token");
     try {
       const response = await fetch(
-        `https://task-management-server-16on.onrender.com/checkAdmin?email=${email}`,
+        `https://task-management-system-server-tau.vercel.app/checkAdmin?email=${email}`,
         {
           method: "GET",
           headers: {

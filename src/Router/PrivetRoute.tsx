@@ -28,7 +28,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   useEffect(()=>{
     socket.emit('users',email)
     socket.on('connectedUsers',(data:{email:string,socketID:string}[])=>{
-      //console.log(data)
+      console.log(data,'connected user')
       dispatch(setOnlineUser(data))
     })
 },[socket,email])
@@ -36,7 +36,7 @@ const PrivetRouts = ({ children }: PrivateRoutesProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user) {
-        fetch("https://task-management-server-16on.onrender.com/jwt", {
+        fetch("https://task-management-system-server-tau.vercel.app/jwt", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

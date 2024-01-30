@@ -51,7 +51,7 @@ function TaskPage() {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const { email, isAdmin } = useSelector((state: RootState) => state.userInfo);
+  const { email, isAdmin,allOnlineUser } = useSelector((state: RootState) => state.userInfo);
 
   const { isModal_Task_true } = useSelector(
     (state: RootState) => state.modalStatus
@@ -287,6 +287,10 @@ function TaskPage() {
                 </button>
               </div>
               <div className="my-task-section-two">My Task</div>
+
+              {
+                allOnlineUser.length==0? <p style={{ textAlign: "center",marginTop:'10px',marginBottom:'10px',color:'red' }}>Socket io is try to connect..server is uploaded in free hoising site....if connect this message will hide.. <br /> users: {allOnlineUser.length} </p>:<></>
+              }
               <div className="my-task-list">
                 {/* {allTask?.getAllTask.map((task:any, index:number) => (
                   <div key={index} className="my-task-name">
@@ -310,6 +314,7 @@ function TaskPage() {
               </div>
             </div>
           </div>
+
         </div>
       ) : (
         <Loading></Loading>

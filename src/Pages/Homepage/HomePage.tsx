@@ -9,13 +9,14 @@ import { RootState } from "../../Redux/store";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loading from "../../components/Loading/Loading";
+import ProjectLoader from "../../components/Loading/ProjectLoader";
 
 function HomePage() {
   const { isAdmin,token,isUserLoading,allOnlineUser } = useSelector((state: RootState) => state.userInfo);
   const [updatePoject, { isSuccess, isError }] = useUpdateProjectMutation();
 
 
-  const { data: projects} = useGetAllProjectQuery("", {skip:token?false:true});
+  const { data: projects,isLoading} = useGetAllProjectQuery("", {skip:token?false:true});
 
   console.log(allOnlineUser)
 
@@ -69,7 +70,7 @@ function HomePage() {
             <div className="homepage-box1">
               <h1>On Goning Project</h1>
 
-              {projects?.pendingProject.map((project, index) => (
+        {isLoading?<><ProjectLoader/></>:<>      {projects?.pendingProject.map((project, index) => (
                 <div key={index} className="task-description2">
                   <h3>{project.projectName}</h3>
                   <div className="description2">
@@ -95,13 +96,13 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))}</>}
             </div>
 
             <div className="homepage-box2">
               <h1>Completed Project</h1>
 
-              {projects?.completedProject.map((project, index) => (
+             { isLoading?<><ProjectLoader></ProjectLoader></>:<>      {projects?.completedProject.map((project, index) => (
                 <div key={index} className="task-description2">
                   <h3>{project.projectName}</h3>
                   <div className="description2">
@@ -129,7 +130,8 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))}</>}
+        
             </div>
           </div>
         </div>
