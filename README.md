@@ -5,9 +5,10 @@ A Website where an organization can add, manage, update their task.
 ## Features
 
 * Admin can add project.
-* Admin can add task for that project
+* Admin can add task for that project. New added task will be visible to all online user in real time.
 * Admin can delete task if needed.
 * User can see and update the status of their task.
+* Real time message-- user can chat with each other in real time.
 * Secure api using Jwt.
 * All State are manage by Redux toolkit.
 * Data fetch(read,write,update,delete) is managed by Redux RTK query
