@@ -93,7 +93,7 @@ function TaskDescription({
 
   return (
     <>
-      {tasks.length == 0 ? (
+      {tasks?.length == 0 ? (
         <h4 style={{ marginTop: "10px", marginLeft: "5px" }}>
           No task to show
         </h4>

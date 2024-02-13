@@ -3,7 +3,8 @@ import { GetAllProject, addProject, addProjectResponse, addTaskData, addTaskResp
 export const api = createApi({
   baseQuery: fetchBaseQuery({
    
-    baseUrl: "https://task-management-system-server-tau.vercel.app",
+    baseUrl: "http://localhost:3000",
+    //baseUrl: "https://task-management-system-server-tau.vercel.app",
     prepareHeaders: (headers) => {
       const token = `Bearer ${localStorage.getItem("access-token")}`;
       if (token) {
